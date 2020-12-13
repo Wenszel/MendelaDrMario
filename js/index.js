@@ -19,23 +19,44 @@ function generatePlayground(){
                 element: document.createElement("div")
             }
             playgroundGridElement.element.classList.add("playground-element");
-            playgroundGridElements.push(playgroundElement);
+            playgroundGridElements.push(playgroundGridElement);
             playgroundElement.appendChild(playgroundGridElement.element);
         }
     }
     document.body.appendChild(playgroundElement)
 }
-var pill = {
-    row: 0,
-    column: undefined,
-    generatePill: function(){
+class pill {
+    row = 0
+    column = undefined
+    colors = [undefined,undefined]
+    generatePill(){
         this.column = Math.floor(Math.random()*config.columns)
-        console.log(pill.column)
+        this.colors = this.generateColors()
+        playgroundGridElements[this.column].element.style.backgroundColor=this.colors[0]
+        playgroundGridElements[this.column-1].element.style.backgroundColor=this.colors[1]
+        playgroundGridElements[this.column].element.style.borderTopRightRadius = "50%"
+        playgroundGridElements[this.column].element.style.borderBottomRightRadius = "50%"
+        playgroundGridElements[this.column-1].element.style.borderTopLeftRadius = "50%"
+        playgroundGridElements[this.column-1].element.style.borderBottomLeftRadius = "50%"
+    }
+    generateColors(){
+        var colors = []
+        for(var i = 0; i<2; i++){
+            colors.push(config.colors[Math.floor(Math.random()*config.colors.length)])
+        }
+        return colors;
+    }
+    fallOnce(){
+        row += 1
+        playgroundGridElements[this.column].element.style.backgroundColor=this.colors[0]
+        
+        playgroundGridElements[this.column-1].element.style.backgroundColor=this.colors[1]
     }
 };
 function startGame(){
     document.getElementById("main-page").style.display="none";
     document.body.style.backgroundImage="url('gfx/game-pattern.png')"
     generatePlayground()
+    var pill1 = new pill()
+    pill1.generatePill()
 }
-//window.addEventListener('DOMContentLoaded',generatePlayground);
