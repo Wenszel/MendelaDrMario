@@ -1,16 +1,100 @@
+:root {
+    --inner: black;
+    --border: black;
+    --accent: #0073EE;
+  }
 body{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: antiquewhite;
+    background-image: url('./gfx/background-pattern.png');
+    background-repeat: repeat;
     margin: 10px;
 }
+.menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    text-align: center;
+    width: 600px;
+    height: 300px;
+    background: var(--inner);
+    box-shadow:
+            0   -6px 0  -2px var(--inner),
+            0    6px 0  -2px var(--inner),
+            0  -12px 0  -4px var(--inner),
+            0   12px 0  -4px var(--inner),
+            0  -18px 0  -8px var(--inner),
+            0   18px 0  -8px var(--inner),
+            0  -24px 0 -12px var(--inner),
+            0   24px 0 -12px var(--inner),
+          
+           -2px  0   0   0   var(--border),
+            2px  0   0   0   var(--border),
+            0   -4px 0   0   var(--border),
+            0    4px 0   0   var(--border),
+            0  -10px 0  -2px var(--border),
+            0   10px 0  -2px var(--border),
+            0  -14px 0  -4px var(--border),
+            0   14px 0  -4px var(--border),
+            0  -20px 0  -8px var(--border),
+            0   20px 0  -8px var(--border),
+            0  -26px 0 -12px var(--border),
+            0   26px 0 -12px var(--border),
+          
+           -4px  0   0   0   var(--accent),
+            4px  0   0   0   var(--accent),
+            0   -2px 0   2px var(--accent),
+            0    2px 0   2px var(--accent),
+            0   -8px 0   0px var(--accent),
+            0    8px 0   0px var(--accent),
+            0  -12px 0  -2px var(--accent),
+            0   12px 0  -2px var(--accent),
+            0  -16px 0  -4px var(--accent),
+            0   16px 0  -4px var(--accent),
+            0  -22px 0  -8px var(--accent),
+            0   22px 0  -8px var(--accent),
+            0  -28px 0 -12px var(--accent),
+            0   28px 0 -12px var(--accent),
+          
+           -6px  0   0   0   var(--border),
+            6px  0   0   0   var(--border),
+            0    0   0   4px var(--border),
+            0   -6px 0   2px var(--border),
+            0    6px 0   2px var(--border),
+            0  -10px 0   0   var(--border),
+            0   10px 0   0   var(--border),
+            0  -14px 0  -2px var(--border),
+            0   14px 0  -2px var(--border),
+            0  -18px 0  -4px var(--border),
+            0   18px 0  -4px var(--border),
+            0  -24px 0  -8px var(--border),
+            0   24px 0  -8px var(--border),
+            0  -30px 0 -12px var(--border),
+            0   30px 0 -12px var(--border);
+      
+}
+.menu-button{
+    cursor: pointer;
+    color: #0073EE;
+    font-size: 20px;
+    font-family: 'Press Start 2P', cursive;
+    margin: 30px;
+
+}
+.menu-button:hover{
+    color: #479efa;
+}
 #playground{
+    margin-top: 100px;
+    background-color: #282828;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto auto;
-    flex-direction: row;
-    border: 3px solid black;
+    border: 5px solid #ffff99;
+    border-top: 0px;
 }
 .playground-element{
     height: 30px;
