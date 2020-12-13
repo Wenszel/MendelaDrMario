@@ -1,3 +1,19 @@
 body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     background-color: antiquewhite;
+    margin: 10px;
+}
+#playground{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto;
+    flex-direction: row;
+    border: 3px solid black;
+}
+.playground-element{
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
 }
