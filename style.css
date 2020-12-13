@@ -10,6 +10,7 @@ body{
     flex-direction: column;
     background-image: url('./gfx/background-pattern.png');
     background-repeat: repeat;
+    background-position: center;
     margin: 10px;
 }
 .menu{
@@ -97,7 +98,7 @@ body{
     border-top: 0px;
 }
 .playground-element{
-    height: 30px;
-    width: 30px;
+    height: 35px;
+    width: 35px;
     border: 1px solid black;
 }
