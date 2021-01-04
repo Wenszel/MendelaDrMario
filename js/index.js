@@ -28,6 +28,14 @@ class pill {
         gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
         gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
     }
+    moveHorizontal(side){
+        gameField.changeElementColor(this.row, this.column[0], "#282828");
+        gameField.changeElementColor(this.row, this.column[1], "#282828");
+        if(side == "left") this.column = [this.column[0]-1,this.column[1]-1]
+        if(side == "right") this.column = [this.column[0]+1,this.column[1]+1]
+        gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
+        gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+    }
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope
         try{
@@ -65,6 +73,12 @@ var gameField = {
             switch(key){
                 case "ArrowDown": 
                     gameField.createFallingInterval(25);
+                    break;
+                case "ArrowLeft":
+                    gameField.currentPill.moveHorizontal("left");
+                    break;
+                case "ArrowRight":
+                    gameField.currentPill.moveHorizontal("right");
                     break;
             }  
         };
