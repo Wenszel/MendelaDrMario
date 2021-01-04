@@ -27,6 +27,7 @@ class pill {
         this.row++;
         gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
         gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+<<<<<<< HEAD
     }
     moveHorizontal(side){
         gameField.changeElementColor(this.row, this.column[0], "#282828");
@@ -35,6 +36,8 @@ class pill {
         if(side == "right") this.column = [this.column[0]+1,this.column[1]+1]
         gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
         gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+=======
+>>>>>>> fad5c87673c8609a57b1f41eacce86f45fb0d9dd
     }
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope
@@ -74,12 +77,15 @@ var gameField = {
                 case "ArrowDown": 
                     gameField.createFallingInterval(25);
                     break;
+<<<<<<< HEAD
                 case "ArrowLeft":
                     gameField.currentPill.moveHorizontal("left");
                     break;
                 case "ArrowRight":
                     gameField.currentPill.moveHorizontal("right");
                     break;
+=======
+>>>>>>> fad5c87673c8609a57b1f41eacce86f45fb0d9dd
             }  
         };
     },
@@ -111,8 +117,12 @@ var gameField = {
                 gameField.elements[gameField.currentPill.row][gameField.currentPill.column[0]].empty = false;
                 gameField.elements[gameField.currentPill.row][gameField.currentPill.column[1]].empty = false;
                 gameField.currentPill=new pill();
+<<<<<<< HEAD
                 gameField.currentPill.generatePill();
             }      
+=======
+            } 
+>>>>>>> fad5c87673c8609a57b1f41eacce86f45fb0d9dd
         },time);
 
     },
