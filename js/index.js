@@ -7,56 +7,52 @@ var config = {
     music: false,
     colors: ["red","blue","yellow"]
 };
-var playgroundGridElements = []
-function generatePlayground(){
-    var playgroundElement = document.createElement("div");
-    playgroundElement.id = "playground";
-    for(var i = 0; i<config.rows; i++){
-        for (var j = 0; j<config.columns; j++){
-            var playgroundGridElement = {
-                row: i,
-                column: j,
-                element: document.createElement("div")
+var gameField = {
+    fieldDiv: document.createElement("div"),
+    elements: [], // two-dimensional array, stores grid objects
+    startGame(){
+        document.getElementById("main-page").style.display="none";
+        document.body.style.backgroundImage="url('gfx/game-pattern.png')"
+        this.initiate()
+    },
+    initiate(){ // create game field and fill up elements array
+        this.fieldDiv.id = "playground";
+        for(let i = 0; i<config.rows; i++){
+            let rowArray = [];
+            for (let j = 0; j<config.columns; j++){
+                let fieldElement = {
+                    row: i,
+                    column: j,
+                    empty: true,
+                    elementDiv: document.createElement("div")
+                }
+                fieldElement.elementDiv.classList.add("playground-element");
+                this.fieldDiv.append(fieldElement.elementDiv);
+                rowArray.push(fieldElement);
             }
-            playgroundGridElement.element.classList.add("playground-element");
-            playgroundGridElements.push(playgroundGridElement);
-            playgroundElement.appendChild(playgroundGridElement.element);
+            this.elements.push(rowArray)
         }
+        document.body.appendChild(this.fieldDiv)
     }
-    document.body.appendChild(playgroundElement)
 }
 class pill {
-    row = 0
-    column = undefined
-    colors = [undefined,undefined]
-    generatePill(){
+    constructor(){
+        this.row = 0
         this.column = Math.floor(Math.random()*config.columns)
-        this.colors = this.generateColors()
-        playgroundGridElements[this.column].element.style.backgroundColor=this.colors[0]
-        playgroundGridElements[this.column-1].element.style.backgroundColor=this.colors[1]
-        playgroundGridElements[this.column].element.style.borderTopRightRadius = "50%"
-        playgroundGridElements[this.column].element.style.borderBottomRightRadius = "50%"
-        playgroundGridElements[this.column-1].element.style.borderTopLeftRadius = "50%"
-        playgroundGridElements[this.column-1].element.style.borderBottomLeftRadius = "50%"
+        this.colors = pill.generateColors()
+    } 
+    generatePill(){
     }
-    generateColors(){
+    fallOnce(){
+    }
+    isFallible(){
+    }
+    static generateColors(){
         var colors = []
         for(var i = 0; i<2; i++){
             colors.push(config.colors[Math.floor(Math.random()*config.colors.length)])
         }
         return colors;
     }
-    fallOnce(){
-        row += 1
-        playgroundGridElements[this.column].element.style.backgroundColor=this.colors[0]
-        
-        playgroundGridElements[this.column-1].element.style.backgroundColor=this.colors[1]
-    }
 };
-function startGame(){
-    document.getElementById("main-page").style.display="none";
-    document.body.style.backgroundImage="url('gfx/game-pattern.png')"
-    generatePlayground()
-    var pill1 = new pill()
-    pill1.generatePill()
-}
+
