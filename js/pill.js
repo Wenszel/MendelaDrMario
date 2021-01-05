@@ -9,6 +9,7 @@ class pill {
         this.column = [randomColumn, randomColumn+1];
         this.colors = pill.generateColors();
         this.direction = "horizontal";
+        this.canMove = true;
     } 
     generatePill(){
         gameField.changePillElementsColor(this);
@@ -20,10 +21,12 @@ class pill {
         gameField.changePillElementsColor(this, false);
     }
     moveHorizontal(side){
-        gameField.changePillElementsColor(this, true);
-        if(side == "left") this.column = [this.column[0]-1,this.column[1]-1]
-        if(side == "right") this.column = [this.column[0]+1,this.column[1]+1]
-        gameField.changePillElementsColor(this, false);
+        if(this.canMove){
+            gameField.changePillElementsColor(this, true);
+            if(side == "left" && this.column[0]-1>=0) this.column = [this.column[0]-1, this.column[1]-1];
+            else if(side == "right" && this.column[1]<config.columns-1) this.column = [this.column[0]+1, this.column[1]+1]
+            gameField.changePillElementsColor(this, false);
+        }
     }
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope

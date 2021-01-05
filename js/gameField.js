@@ -13,6 +13,7 @@ var gameField = {
             const key = event.key;
             switch(key){
                 case "ArrowDown": 
+                    gameField.currentPill.canMove = false;
                     gameField.createFallingInterval(25);
                     break;
                 case "ArrowLeft":
