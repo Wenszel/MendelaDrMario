@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr Mario</title>
-    <link rel="shortcut icon" href="gfx/favicon.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <script src="js/config.js"></script>
-    <script src="js/pill.js"></script>
-    <script src="js/virus.js"></script>
-    <script src="js/gameField.js"></script>
-  
-</head>
-<body>
-    <img src="gfx/logo.png" alt="logo" height="200px">
-    <div id="main-page">
+    <head>
+        <title>Dr Mario</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+        <link rel="shortcut icon" href="gfx/favicon.png" type="image/x-icon">
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <script src="js/config.js"></script>
+        <script src="js/pill.js"></script>
+        <script src="js/virus.js"></script>
         
-        <div class="menu">
-            <div class="menu-button" onclick="gameField.startGame()">START GAME</div>
-            <div class="menu-button">SETTINGS</div>
-            <div class="menu-button">ABOUT AUTHOR</div>
+    </head>
+    <body>
+        <img src="gfx/logo.png" alt="logo" height="100px">
+        <div id="main-page"> 
+            <div class="menu">
+                <div class="menu-button" onclick="gameField.startGame()">START GAME</div>
+                <div class="menu-button">SETTINGS</div>
+                <div class="menu-button">ABOUT AUTHOR</div>
+            </div>
         </div>
-    </div>
-   
-</body>
+        <script src="js/gameField.js"></script>
+    </body>
 </html>
