@@ -1,7 +1,7 @@
 "strict mode";
 class pill {
     constructor(){
-        this.row = 0;
+        this.row = [0];
         // this loop deletes case when column is out of range
         do{
             var randomColumn = Math.floor(Math.random()*config.columns); 
@@ -11,23 +11,19 @@ class pill {
         this.direction = "horizontal";
     } 
     generatePill(){
-        gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
-        gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+        gameField.changePillElementsColor(this);
+        gameField.createFallingInterval(1000);
     }
     fallOnce(){
-        gameField.changeElementColor(this.row, this.column[0], "#282828");
-        gameField.changeElementColor(this.row, this.column[1], "#282828");
-        this.row++;
-        gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
-        gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+        gameField.changePillElementsColor(this, true);
+        this.row[0]++;
+        gameField.changePillElementsColor(this, false);
     }
     moveHorizontal(side){
-        gameField.changeElementColor(this.row, this.column[0], "#282828");
-        gameField.changeElementColor(this.row, this.column[1], "#282828");
+        gameField.changePillElementsColor(this, true);
         if(side == "left") this.column = [this.column[0]-1,this.column[1]-1]
         if(side == "right") this.column = [this.column[0]+1,this.column[1]+1]
-        gameField.changeElementColor(this.row, this.column[0], this.colors[0]);
-        gameField.changeElementColor(this.row, this.column[1], this.colors[1]);
+        gameField.changePillElementsColor(this, false);
     }
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope

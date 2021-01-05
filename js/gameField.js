@@ -8,7 +8,6 @@ var gameField = {
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
         this.currentPill.generatePill();
-        this.createFallingInterval(1000);
         document.onkeydown = function(event){
             const key = event.key;
             switch(key){
@@ -47,17 +46,30 @@ var gameField = {
         clearInterval(fallingInterval);
         var fallingInterval = setInterval(function(){
             gameField.currentPill.fallOnce();
-            if (!gameField.currentPill.isFallible(gameField.currentPill.row, gameField.currentPill.column[0])){
+            if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
                 clearInterval(fallingInterval)
-                gameField.elements[gameField.currentPill.row][gameField.currentPill.column[0]].empty = false;
-                gameField.elements[gameField.currentPill.row][gameField.currentPill.column[1]].empty = false;
+                gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[0]].empty = false;
+                gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[1]].empty = false;
                 gameField.currentPill=new pill();
                 gameField.currentPill.generatePill();
             }      
         },time);
-
     },
-    changeElementColor(row, column, color){
-        this.elements[row][column].elementDiv.style.backgroundColor = color;
+    changePillElementsColor(pill, defaultColor){
+        if(defaultColor){
+            var colors=[config.backgroundColor, config.backgroundColor];
+        }else{
+            var colors = pill.colors
+        }
+        if(pill.direction=="horizontal"){
+            pill.column.forEach((columnIndex, arrayIndex)=>{
+                gameField.elements[pill.row[0]][columnIndex].elementDiv.style.backgroundColor = colors[arrayIndex];
+            });
+        }
+        else if(pill.direction=="veritcal"){
+            pill.row.forEach((rowIndex, arrayIndex)=>{
+                gameField.elements[rowIndex][pill.column[0]].elementDiv.style.backgroundColor = colors[arrayIndex];
+            });
+        }
     }
 };
