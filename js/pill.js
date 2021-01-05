@@ -12,7 +12,7 @@ class pill {
     } 
     generatePill(){
         gameField.changePillElementsColor(this);
-        gameField.createFallingInterval(1000);
+        gameField.createFallingInterval(config.speed);
     }
     fallOnce(){
         gameField.changePillElementsColor(this, true);

@@ -3,6 +3,7 @@ var gameField = {
     fieldDiv: document.createElement("div"),
     currentPill: new pill(),
     elements: [], // two-dimensional array, stores grid objects
+    fallingInterval: null,
     startGame(){
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
@@ -43,11 +44,10 @@ var gameField = {
         document.body.appendChild(this.fieldDiv);
     },
     createFallingInterval(time){
-        clearInterval(fallingInterval);
-        var fallingInterval = setInterval(function(){
+        clearInterval(gameField.fallingInterval)
+        this.fallingInterval = setInterval(function(){
             gameField.currentPill.fallOnce();
             if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
-                clearInterval(fallingInterval)
                 gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[0]].empty = false;
                 gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[1]].empty = false;
                 gameField.currentPill=new pill();
