@@ -25,8 +25,22 @@ class pill {
         if(this.canMove){
             //TODO: tutaj musi byc jeszcze warunek odnosnie zajetego
             gameField.changePillElementsColor(this, true);
-            if(side == "left" && this.column[0]-1>=0) this.column = [this.column[0]-1, this.column[1]-1];
-            else if(side == "right" && this.column[1]<config.columns-1) this.column = [this.column[0]+1, this.column[1]+1]
+            if(side == "left" && this.column[0]-1>=0){
+                if(this.direction=="horizontal"){
+                    this.column = [this.column[0]-1, this.column[1]-1];
+                }else{
+                    this.column = [this.column[0]-1];
+                }
+                
+            }
+            else if(side == "right" && ((this.direction=="horizontal" && this.column[1]<config.columns-1)||(this.direction=="vertical" && this.column[0]<config.columns-1))){
+                if(this.direction=="horizontal"){
+                    this.column = [this.column[0]+1, this.column[1]+1];
+                }else{
+                    this.column = [this.column[0]+1];
+                }
+
+            }
             gameField.changePillElementsColor(this, false);
         }
     }
@@ -34,17 +48,15 @@ class pill {
         gameField.changePillElementsColor(this, true);
         if(this.direction=="horizontal") {
             this.direction="vertical";
-            if(side=="left"){
-                this.column = [this.column[0]];
-                this.row = [this.row[0],this.row[0]-1];
-            }
+            this.column = [this.column[0]];
+            this.row = [this.row[0],this.row[0]-1];
+            if(side=="right") this.colors = this.colors.reverse();
         }
         else{
             this.direction="horizontal";
-            if(side=="left"){
-                this.column = [this.column[0],this.column[0]+1];
-                this.row = [this.row[0]];
-            }   
+            this.column = [this.column[0],this.column[0]+1];
+            this.row = [this.row[0]];
+            if(side=="left") this.colors = this.colors.reverse();   
         }
         gameField.changePillElementsColor(this, false);
     }
