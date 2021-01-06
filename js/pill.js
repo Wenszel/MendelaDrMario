@@ -23,20 +23,18 @@ class pill {
     }
     moveHorizontal(side){
         if(this.canMove){
-            //TODO: tutaj musi byc jeszcze warunek odnosnie zajetego
             gameField.changePillElementsColor(this, true);
             if(side == "left" && this.column[0]-1>=0){
-                if(this.direction=="horizontal"){
+                if(this.direction=="horizontal" && gameField.elements[gameField.currentPill.row][this.column[0]-1].empty){
                     this.column = [this.column[0]-1, this.column[1]-1];
-                }else{
-                    this.column = [this.column[0]-1];
+                }else if(this.direction=="vertical" && gameField.elements[gameField.currentPill.row[0]][this.column[0]-1].empty && gameField.elements[gameField.currentPill.row[1]][this.column[0]-1].empty){
+                    this.column = [this.column[0]-1] ;
                 }
-                
             }
             else if(side == "right" && ((this.direction=="horizontal" && this.column[1]<config.columns-1)||(this.direction=="vertical" && this.column[0]<config.columns-1))){
-                if(this.direction=="horizontal"){
+                if(this.direction=="horizontal" && gameField.elements[gameField.currentPill.row][this.column[1]+1].empty){
                     this.column = [this.column[0]+1, this.column[1]+1];
-                }else{
+                }else if (this.direction=="vertical" && gameField.elements[gameField.currentPill.row[0]][this.column[0]+1].empty && gameField.elements[gameField.currentPill.row[1]][this.column[0]+1].empty){
                     this.column = [this.column[0]+1];
                 }
 
@@ -63,22 +61,29 @@ class pill {
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope
         try{
-            if(gameField.elements[row+1][column].empty && gameField.elements[row+1][column+1].empty){
-                return true;
+            if(this.direction=="horizontal"){
+                if(gameField.elements[row+1][column].empty && gameField.elements[row+1][column+1].empty){
+                    return true;
+                }else{
+                    return false;
+                }
             }else{
-                return false;
+                if(gameField.elements[row+2][column].empty){
+                    return true;
+                }else{
+                    return false;
+                }  
             }
+            
         }catch (error){
             return false;
         }
     }
     static generateColors(){
-        do{
-            var colors = [];
-            for(let i = 0; i<2; i++){
-                colors.push(config.colors[Math.floor(Math.random()*config.colors.length)]);
-            }
-        }while(colors[0]==colors[1])
+        let colors = [];
+        for(let i = 0; i<2; i++){
+            colors.push(config.colors[Math.floor(Math.random()*config.colors.length)]);
+        }
         return colors;
     }
 };

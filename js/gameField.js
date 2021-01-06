@@ -59,8 +59,14 @@ var gameField = {
         this.fallingInterval = setInterval(function(){
             gameField.currentPill.fallOnce();
             if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
-                //gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[0]].empty = false;
-                //gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[1]].empty = false;
+                if(gameField.currentPill.direction=="horizontal"){
+                    gameField.elements[gameField.currentPill.row[0]][gameField.currentPill.column[0]].empty = false;
+                    gameField.elements[gameField.currentPill.row[0]][gameField.currentPill.column[1]].empty = false;
+                }else{
+                    gameField.elements[gameField.currentPill.row[0]][gameField.currentPill.column[0]].empty = false;
+                    gameField.elements[gameField.currentPill.row[1]][gameField.currentPill.column[0]].empty = false;
+ 
+                }
                 gameField.currentPill=new pill();
                 gameField.currentPill.generatePill();
             }      
