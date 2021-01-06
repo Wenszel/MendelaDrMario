@@ -13,14 +13,24 @@ var gameField = {
             const key = event.key;
             switch(key){
                 case "ArrowDown": 
+                case "s":
                     gameField.currentPill.canMove = false;
                     gameField.createFallingInterval(25);
                     break;
                 case "ArrowLeft":
+                case "a":
                     gameField.currentPill.moveHorizontal("left");
                     break;
                 case "ArrowRight":
+                case "d":
                     gameField.currentPill.moveHorizontal("right");
+                    break;
+                case "ArrowUp":
+                case "w":
+                    gameField.currentPill.rotate("left");
+                    break;
+                case "Shift":
+                    gameField.currentPill.rotate("right");
                     break;
             }  
         };
@@ -49,8 +59,8 @@ var gameField = {
         this.fallingInterval = setInterval(function(){
             gameField.currentPill.fallOnce();
             if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
-                gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[0]].empty = false;
-                gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[1]].empty = false;
+                //gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[0]].empty = false;
+                //gameField.elements[gameField.currentPill.row[gameField.currentPill.row.length-1]][gameField.currentPill.column[1]].empty = false;
                 gameField.currentPill=new pill();
                 gameField.currentPill.generatePill();
             }      
@@ -67,7 +77,7 @@ var gameField = {
                 gameField.elements[pill.row[0]][columnIndex].elementDiv.style.backgroundColor = colors[arrayIndex];
             });
         }
-        else if(pill.direction=="veritcal"){
+        else if(pill.direction=="vertical"){
             pill.row.forEach((rowIndex, arrayIndex)=>{
                 gameField.elements[rowIndex][pill.column[0]].elementDiv.style.backgroundColor = colors[arrayIndex];
             });

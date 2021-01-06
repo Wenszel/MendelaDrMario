@@ -18,15 +18,35 @@ class pill {
     fallOnce(){
         gameField.changePillElementsColor(this, true);
         this.row[0]++;
+        if(this.direction=="vertical") this.row[1]++
         gameField.changePillElementsColor(this, false);
     }
     moveHorizontal(side){
         if(this.canMove){
+            //TODO: tutaj musi byc jeszcze warunek odnosnie zajetego
             gameField.changePillElementsColor(this, true);
             if(side == "left" && this.column[0]-1>=0) this.column = [this.column[0]-1, this.column[1]-1];
             else if(side == "right" && this.column[1]<config.columns-1) this.column = [this.column[0]+1, this.column[1]+1]
             gameField.changePillElementsColor(this, false);
         }
+    }
+    rotate(side){
+        gameField.changePillElementsColor(this, true);
+        if(this.direction=="horizontal") {
+            this.direction="vertical";
+            if(side=="left"){
+                this.column = [this.column[0]];
+                this.row = [this.row[0],this.row[0]-1];
+            }
+        }
+        else{
+            this.direction="horizontal";
+            if(side=="left"){
+                this.column = [this.column[0],this.column[0]+1];
+                this.row = [this.row[0]];
+            }   
+        }
+        gameField.changePillElementsColor(this, false);
     }
     isFallible(row, column){
         //check if fields below pill are empty and in rows scope
