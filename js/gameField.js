@@ -8,7 +8,7 @@ var gameField = {
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
-        this.currentPill.generatePill();
+        this.currentPill.generate();
         document.onkeydown = function(event){
             const key = event.key;
             switch(key){
@@ -53,11 +53,15 @@ var gameField = {
             this.elements.push(rowArray);
         }
         document.body.appendChild(this.fieldDiv);
+        for(let i = 0; i<config.virusAmount; i++){
+            let newVirus = new virus();
+            newVirus.generate();
+        }
     },
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            gameField.currentPill.fallOnce();
+            gameField.currentPill.fallOnce();  
             if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
                 if(gameField.currentPill.direction=="horizontal"){
                     gameField.elements[gameField.currentPill.row[0]][gameField.currentPill.column[0]].empty = false;
@@ -65,11 +69,10 @@ var gameField = {
                 }else{
                     gameField.elements[gameField.currentPill.row[0]][gameField.currentPill.column[0]].empty = false;
                     gameField.elements[gameField.currentPill.row[1]][gameField.currentPill.column[0]].empty = false;
- 
                 }
                 gameField.currentPill=new pill();
-                gameField.currentPill.generatePill();
-            }      
+                gameField.currentPill.generate();
+            }    
         },time);
     },
     changePillElementsColor(pill, defaultColor){
@@ -88,5 +91,11 @@ var gameField = {
                 gameField.elements[rowIndex][pill.column[0]].elementDiv.style.backgroundColor = colors[arrayIndex];
             });
         }
+    },
+    breakBlocks(){
+        //zbijanie 4 wertykalnie
+        //zbijanie 4 horyzontalnie
+        //ustawic bloki zbite na empty true
+        //krzyzowanie
     }
 };

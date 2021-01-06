@@ -11,7 +11,7 @@ class pill {
         this.direction = "horizontal";
         this.canMove = true;
     } 
-    generatePill(){
+    generate(){
         gameField.changePillElementsColor(this);
         gameField.createFallingInterval(config.speed);
     }
@@ -28,7 +28,7 @@ class pill {
                 if(this.direction=="horizontal" && gameField.elements[gameField.currentPill.row][this.column[0]-1].empty){
                     this.column = [this.column[0]-1, this.column[1]-1];
                 }else if(this.direction=="vertical" && gameField.elements[gameField.currentPill.row[0]][this.column[0]-1].empty && gameField.elements[gameField.currentPill.row[1]][this.column[0]-1].empty){
-                    this.column = [this.column[0]-1] ;
+                    this.column = [this.column[0]-1];
                 }
             }
             else if(side == "right" && ((this.direction=="horizontal" && this.column[1]<config.columns-1)||(this.direction=="vertical" && this.column[0]<config.columns-1))){
@@ -73,10 +73,11 @@ class pill {
                 }else{
                     return false;
                 }  
-            }
-            
+            }   
         }catch (error){
-            return false;
+            if (error instanceof TypeError){
+                return false;
+            }   
         }
     }
     static generateColors(){
