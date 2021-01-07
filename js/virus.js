@@ -2,7 +2,7 @@
 class virus {
     constructor(){
         do{
-            this.row = config.rows-Math.floor(Math.random()*config.columns);
+            this.row = Math.floor(Math.random()*config.rows);
             this.column = Math.floor(Math.random()*config.columns); 
         }while(!gameField.elements[this.row][this.column].empty)
         this.color = config.colors[Math.floor(Math.random()*config.colors.length)];
