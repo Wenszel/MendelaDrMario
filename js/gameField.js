@@ -90,38 +90,38 @@ var gameField = {
         }
     },
     breakBlocks(row, column){
-        //zbijanie 4 wertykalnie
-        var counter = 0
-        try{
-        
-        while(gameField.elements[row][column].color == gameField.elements[row+counter][column].color){
-            counter++
+        let sameColorElementsHorizontal = [];
+        let sameColorElementsVertical = [];
+        for(let i = 0; i+row<config.rows; i++){
+            if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
+            sameColorElementsVertical.push([row+i,column]);
         }
-        if(counter>=4){
-            while(counter>=0){
-                gameField.elements[row+counter][column].color = null
-                gameField.elements[row+counter][column].empty = true
-                gameField.elements[row+counter][column].elementDiv.style.backgroundColor = config.backgroundColor;
-                counter--
+        for(let i = 0; i-row>=0; i--){
+            if(gameField.elements[row][column].color != gameField.elements[row-i][column].color) break;
+            sameColorElementsVertical.push([row-i,column]);
+        }
+        for(let i = 0; i-column>=0; i--){
+            if(gameField.elements[row][column].color != gameField.elements[row][column-i].color) break;
+            sameColorElementsHorizontal.push([row,column-i]);
+
+        }
+        for(let i = 0; i+column<config.columns; i++){
+            if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
+             sameColorElementsHorizontal.push([row,column+i]);
+        }
+        if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
+            let breakElement = function(cordinates){
+                gameField.elements[cordinates[0]][cordinates[1]].color = null;
+                gameField.elements[cordinates[0]][cordinates[1]].empty = true;
+                gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundColor = config.backgroundColor;
             }
-            
-        }}catch (error){
-            if(counter>=4){
-                while(counter>=0){
-                    gameField.elements[row+counter-1][column].color = null
-                    gameField.elements[row+counter-1][column].empty = true
-                    gameField.elements[row+counter-1][column].elementDiv.style.backgroundColor = config.backgroundColor;
-                    counter--
-                }
+            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
         }
-        }
-        //zbijanie 4 horyzontalnie
-        //ustawic bloki zbite na empty true
-        //krzyzowanie
     },
     elementLanded(row,column,color){
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].empty = false;
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
-        gameField.breakBlocks(gameField.currentPill.row[row], gameField.currentPill.column[column])
+        gameField.breakBlocks(gameField.currentPill.row[row], gameField.currentPill.column[column]);
     },
 };

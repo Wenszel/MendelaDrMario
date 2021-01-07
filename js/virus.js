@@ -10,5 +10,6 @@ class virus {
     generate(){
         gameField.elements[this.row][this.column].elementDiv.style.backgroundColor = this.color;
         gameField.elements[this.row][this.column].empty = false;
+        gameField.elements[this.row][this.column].color = this.color;
     }
 }
