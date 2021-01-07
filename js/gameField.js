@@ -2,6 +2,8 @@
 var gameField = {
     fieldDiv: document.createElement("div"),
     currentPill: new pill(),
+    pillsOnMap: [],
+    virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
     fallingInterval: null,
     startGame(){
@@ -56,6 +58,7 @@ var gameField = {
         document.body.appendChild(this.fieldDiv);
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus();
+            this.virusOnMap.push(newVirus);
             newVirus.generate();
         }
     },
@@ -67,6 +70,8 @@ var gameField = {
                 gameField.elementLanded(0,0,0);
                 if (gameField.currentPill.direction=="horizontal") gameField.elementLanded(0,1,1);
                 else gameField.elementLanded(1,0,1);
+                gameField.pillsOnMap.push(gameField.currentPill);
+                gameField.fallElements();
                 gameField.currentPill=new pill();
                 gameField.currentPill.generate();
             }    
@@ -124,4 +129,7 @@ var gameField = {
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
         gameField.breakBlocks(gameField.currentPill.row[row], gameField.currentPill.column[column]);
     },
+    fallElements(){
+
+    }
 };
