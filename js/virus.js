@@ -8,7 +8,7 @@ class virus {
         this.color = config.colors[Math.floor(Math.random()*config.colors.length)];
     }
     generate(){
-        gameField.elements[this.row][this.column].elementDiv.style.backgroundColor = this.color;
+        gameField.elements[this.row][this.column].elementDiv.style.backgroundImage = "url('gfx/"+this.color+"_virus.png')";
         gameField.elements[this.row][this.column].empty = false;
         gameField.elements[this.row][this.column].color = this.color;
     }
