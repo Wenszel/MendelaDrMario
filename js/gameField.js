@@ -79,19 +79,17 @@ var gameField = {
     }, 
     changePillElementsColor(pill, defaultColor){
         if(defaultColor){
-            var colors=[config.backgroundColor, config.backgroundColor];
+            var colors= ["",""];
         }else{
             var colors = pill.colors
         }
         if(pill.direction=="horizontal"){
-            pill.column.forEach((columnIndex, arrayIndex)=>{
-                gameField.elements[pill.row[0]][columnIndex].elementDiv.style.backgroundColor = colors[arrayIndex];
-            });
+            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[0]+"_left.png')";
+            gameField.elements[pill.row[0]][pill.column[1]].elementDiv.style.backgroundImage = "url('gfx/"+colors[1]+"_right.png')";
         }
         else if(pill.direction=="vertical"){
-            pill.row.forEach((rowIndex, arrayIndex)=>{
-                gameField.elements[rowIndex][pill.column[0]].elementDiv.style.backgroundColor = colors[arrayIndex];
-            });
+            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[0]+"_down.png')";
+            gameField.elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[1]+"_up.png')";
         }
     },
     breakBlocks(row, column){
@@ -108,7 +106,6 @@ var gameField = {
         for(let i = 0; i-column>=0; i--){
             if(gameField.elements[row][column].color != gameField.elements[row][column-i].color) break;
             sameColorElementsHorizontal.push([row,column-i]);
-
         }
         for(let i = 0; i+column<config.columns; i++){
             if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
@@ -118,7 +115,7 @@ var gameField = {
             let breakElement = function(cordinates){
                 gameField.elements[cordinates[0]][cordinates[1]].color = null;
                 gameField.elements[cordinates[0]][cordinates[1]].empty = true;
-                gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundColor = config.backgroundColor;
+                gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
             }
             sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});

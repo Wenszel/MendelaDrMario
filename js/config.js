@@ -5,6 +5,5 @@ var config = {
     speed: 500,
     virusAmount: 0,
     music: false,
-    colors: ["red","blue","yellow"],
-    backgroundColor: "#282828"
+    colors: ["brown","blue","yellow"]
 };
