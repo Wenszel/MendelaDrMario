@@ -11,6 +11,7 @@ var gameField = {
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
         this.currentPill.generate();
+        //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
             const key = event.key;
             switch(key){
@@ -56,6 +57,7 @@ var gameField = {
             this.elements.push(rowArray);
         }
         document.body.appendChild(this.fieldDiv);
+        //generate viruses based on information in config
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
@@ -65,16 +67,22 @@ var gameField = {
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            gameField.currentPill.fallOnce();  
-            if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
+            //condition that handle situation when pill cant keep falling
+            if (gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
+                gameField.currentPill.fallOnce();     
+            }else{
                 gameField.elementLanded(0,0,0);
                 if (gameField.currentPill.direction=="horizontal") gameField.elementLanded(0,1,1);
                 else gameField.elementLanded(1,0,1);
                 gameField.pillsOnMap.push(gameField.currentPill);
                 gameField.fallElements();
-                gameField.currentPill=new pill();
-                gameField.currentPill.generate();
-            }    
+                if(gameField.currentPill.row==0){
+                    alert("Koniec gry")
+                }else{
+                    gameField.currentPill=new pill();
+                    gameField.currentPill.generate();
+                }
+            }        
         },time);
     }, 
     changePillElementsColor(pill, defaultColor){
@@ -126,6 +134,7 @@ var gameField = {
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
         }
     },
+    //set gamefield elements as taken by pill and checks if blocks can be break
     elementLanded(row,column,color){
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].empty = false;
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
