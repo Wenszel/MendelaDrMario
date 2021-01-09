@@ -51,8 +51,12 @@ class pill {
             if(side=="right") this.colors = this.colors.reverse();
         }
         else{
+            if(this.column[0]==config.columns-1){
+                this.column = [this.column[0]-1,this.column[0]];
+            }else{
+                this.column = [this.column[0],this.column[0]+1];
+            }
             this.direction="horizontal";
-            this.column = [this.column[0],this.column[0]+1];
             this.row = [this.row[0]];
             if(side=="left") this.colors = this.colors.reverse();   
         }
