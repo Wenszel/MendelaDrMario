@@ -77,7 +77,11 @@ var gameField = {
                 gameField.pillsOnMap.push(gameField.currentPill);
                 gameField.fallElements();
                 if(gameField.currentPill.row==0){
-                    alert("Koniec gry")
+                    let gameoverImage = new Image();
+                    gameoverImage.src="gfx/gameover.png"
+                    gameoverImage.classList.add("gameover-image");
+                    document.body.appendChild(gameoverImage);
+                    clearInterval(gameField.fallingInterval);
                 }else{
                     gameField.currentPill=new pill();
                     gameField.currentPill.generate();

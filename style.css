@@ -103,3 +103,12 @@ body{
     width: 15px;
     
 }
+.gameover-image{
+    width: 668px;
+    height: 238px;
+    position: absolute;
+    width: 200;
+    z-index: 1;
+    align-self: center;
+    justify-self: center;
+}
