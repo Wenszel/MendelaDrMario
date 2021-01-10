@@ -1,7 +1,8 @@
 "strict mode";
+//TODO: one color error
 var gameField = {
     fieldDiv: document.createElement("div"),
-    currentPill: new pill(),
+    currentPill: null,
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
@@ -10,7 +11,7 @@ var gameField = {
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
-        this.currentPill.generate();
+        this.currentPill = new pill();
         //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
             const key = event.key;
@@ -61,7 +62,6 @@ var gameField = {
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
-            newVirus.generate();
         }
     },
     createFallingInterval(time){
@@ -83,13 +83,6 @@ var gameField = {
                 gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[0]);
                 gameField.pillsOnMap.push(gameField.currentPill);
                 gameField.fallElements();
-                localStorage.setItem("points",0);
-                gameField.virusOnMap.forEach((virus)=>{
-                    if(gameField.elements[virus.row][virus.column].empty){
-                        localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
-                    }
-                });
-                console.log("Points: "+localStorage.getItem("points"));
                 if(gameField.currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -98,7 +91,6 @@ var gameField = {
                     clearInterval(gameField.fallingInterval);
                 }else{
                     gameField.currentPill=new pill();
-                    gameField.currentPill.generate();
                 }
             }        
         },time);
@@ -130,15 +122,15 @@ var gameField = {
             if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
             sameColorElementsVertical.push([row+i,column]);
         }
-        for(let i = 0; i-row>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row-i][column].color) break;
-            sameColorElementsVertical.push([row-i,column]);
+        for(let i = -1; row+i>=0; i--){
+            if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
+            sameColorElementsVertical.push([row+i,column]);
         }
-        for(let i = 0; i-column>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row][column-i].color) break;
-            sameColorElementsHorizontal.push([row,column-i]);
+        for(let i = 0; column+i>=0; i--){
+            if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
+            sameColorElementsHorizontal.push([row,column+i]);
         }
-        for(let i = 0; i+column<config.columns; i++){
+        for(let i = 1; i+column<config.columns; i++){
             if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
              sameColorElementsHorizontal.push([row,column+i]);
         }
@@ -148,6 +140,12 @@ var gameField = {
                 gameField.elements[cordinates[0]][cordinates[1]].empty = true;
                 gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
             }
+            localStorage.setItem("points",0);
+            gameField.virusOnMap.forEach((virus)=>{
+                if(gameField.elements[virus.row][virus.column].empty){
+                    localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
+                }
+            });
             sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
         }
