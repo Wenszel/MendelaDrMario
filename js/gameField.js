@@ -72,10 +72,24 @@ var gameField = {
                 gameField.currentPill.fallOnce();     
             }else{
                 gameField.elementLanded(0,0,0);
-                if (gameField.currentPill.direction=="horizontal") gameField.elementLanded(0,1,1);
-                else gameField.elementLanded(1,0,1);
+                if (gameField.currentPill.direction=="horizontal") {
+                    gameField.elementLanded(0,1,1);
+                    gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[1]);
+                }
+                else {
+                    gameField.elementLanded(1,0,1);
+                    gameField.breakBlocks(gameField.currentPill.row[1], gameField.currentPill.column[0]);
+                }
+                gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[0]);
                 gameField.pillsOnMap.push(gameField.currentPill);
                 gameField.fallElements();
+                localStorage.setItem("points",0);
+                gameField.virusOnMap.forEach((virus)=>{
+                    if(gameField.elements[virus.row][virus.column].empty){
+                        localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
+                    }
+                });
+                console.log("Points: "+localStorage.getItem("points"));
                 if(gameField.currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -142,7 +156,14 @@ var gameField = {
     elementLanded(row,column,color){
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].empty = false;
         gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
-        gameField.breakBlocks(gameField.currentPill.row[row], gameField.currentPill.column[column]);
+        
+    },
+    findPillByCordinates(rows,columns){
+        let pill = this.pillsOnMap.find((i)=>{
+            i.row=rows;
+            i.column=columns;
+        })
+        return pill;
     },
     fallElements(){
 
