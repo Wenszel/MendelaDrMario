@@ -68,7 +68,7 @@ var gameField = {
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
             //condition that handle situation when pill cant keep falling
-            if (gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
+            if (gameField.currentPill.isFallible()){
                 gameField.currentPill.fallOnce();     
             }else{
                 gameField.elementLanded(0,0,0);
@@ -82,7 +82,7 @@ var gameField = {
                 }
                 gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[0]);
                 gameField.pillsOnMap.push(gameField.currentPill);
-                gameField.fallElements();
+                //gameField.fallElements();
                 if(gameField.currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -140,14 +140,14 @@ var gameField = {
                 gameField.elements[cordinates[0]][cordinates[1]].empty = true;
                 gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
             }
+            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
             localStorage.setItem("points",0);
             gameField.virusOnMap.forEach((virus)=>{
                 if(gameField.elements[virus.row][virus.column].empty){
                     localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
                 }
-            });
-            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+            });    
         }
     },
     //set gamefield elements as taken by pill and checks if blocks can be break
@@ -164,6 +164,10 @@ var gameField = {
         return pill;
     },
     fallElements(){
-
+        gameField.pillsOnMap.forEach(pill=>{
+            while(pill.isFallible()){
+                pill.fallOnce();
+            }
+        });
     }
 };

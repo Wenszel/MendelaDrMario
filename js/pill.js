@@ -63,8 +63,10 @@ class pill {
             gameField.changePillElementsColor(this, false);
         }
     }
-    isFallible(row, column){
+    isFallible(){
         //check if fields below pill are empty and in rows scope
+        let row = this.row[this.row.length-1];
+        let column = this.column[0];
         try{
             if(this.direction=="horizontal"){
                 if(gameField.elements[row+1][column].empty && gameField.elements[row+1][column+1].empty){
