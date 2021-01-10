@@ -67,23 +67,24 @@ var gameField = {
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
+            let {currentPill, pillsOnMap, elementLanded, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
-            if (gameField.currentPill.isFallible()){
-                gameField.currentPill.fallOnce();     
+            if (currentPill.isFallible()){
+                currentPill.fallOnce();     
             }else{
-                gameField.elementLanded(0,0,0);
-                if (gameField.currentPill.direction=="horizontal") {
-                    gameField.elementLanded(0,1,1);
-                    gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[1]);
+                elementLanded(0,0,0);
+                if (currentPill.direction=="horizontal") {
+                    elementLanded(0,1,1);
+                    breakBlocks(currentPill.row[0], currentPill.column[1]);
                 }
                 else {
-                    gameField.elementLanded(1,0,1);
-                    gameField.breakBlocks(gameField.currentPill.row[1], gameField.currentPill.column[0]);
+                    elementLanded(1,0,1);
+                    breakBlocks(currentPill.row[1], currentPill.column[0]);
                 }
-                gameField.breakBlocks(gameField.currentPill.row[0], gameField.currentPill.column[0]);
-                gameField.pillsOnMap.push(gameField.currentPill);
+                breakBlocks(currentPill.row[0], currentPill.column[0]);
+                pillsOnMap.push(currentPill);
                 //gameField.fallElements();
-                if(gameField.currentPill.row==0){
+                if(currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
                     gameoverImage.classList.add("gameover-image");
@@ -96,6 +97,7 @@ var gameField = {
         },time);
     }, 
     changePillElementsColor(pill, defaultColor){
+        let {elements} = gameField;
         if(defaultColor){
             var colors= ["","","",""];
         }else{
@@ -107,44 +109,45 @@ var gameField = {
             ]
         }
         if(pill.direction=="horizontal"){
-            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[0];
-            gameField.elements[pill.row[0]][pill.column[1]].elementDiv.style.backgroundImage = colors[1];
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[0];
+            elements[pill.row[0]][pill.column[1]].elementDiv.style.backgroundImage = colors[1];
         }
         else if(pill.direction=="vertical"){
-            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[2];
-            gameField.elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = colors[3];
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[2];
+            elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = colors[3];
         }
     },
     breakBlocks(row, column){
         let sameColorElementsHorizontal = [];
         let sameColorElementsVertical = [];
+        let {elements, virusOnMap} = gameField;
         for(let i = 0; i+row<config.rows; i++){
-            if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
+            if(elements[row][column].color != elements[row+i][column].color) break;
             sameColorElementsVertical.push([row+i,column]);
         }
         for(let i = -1; row+i>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
+            if(elements[row][column].color != elements[row+i][column].color) break;
             sameColorElementsVertical.push([row+i,column]);
         }
         for(let i = 0; column+i>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
+            if(elements[row][column].color != elements[row][column+i].color) break;
             sameColorElementsHorizontal.push([row,column+i]);
         }
         for(let i = 1; i+column<config.columns; i++){
-            if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
+            if(elements[row][column].color != elements[row][column+i].color) break;
              sameColorElementsHorizontal.push([row,column+i]);
         }
         if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
             let breakElement = function(cordinates){
-                gameField.elements[cordinates[0]][cordinates[1]].color = null;
-                gameField.elements[cordinates[0]][cordinates[1]].empty = true;
-                gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
+                elements[cordinates[0]][cordinates[1]].color = null;
+                elements[cordinates[0]][cordinates[1]].empty = true;
+                elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
             }
             sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
             localStorage.setItem("points",0);
-            gameField.virusOnMap.forEach((virus)=>{
-                if(gameField.elements[virus.row][virus.column].empty){
+            virusOnMap.forEach((virus)=>{
+                if(elements[virus.row][virus.column].empty){
                     localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
                 }
             });    
@@ -152,9 +155,9 @@ var gameField = {
     },
     //set gamefield elements as taken by pill and checks if blocks can be break
     elementLanded(row,column,color){
-        gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].empty = false;
-        gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
-        
+        let {elements, currentPill} = gameField;
+        elements[currentPill.row[row]][currentPill.column[column]].empty = false;
+        elements[currentPill.row[row]][currentPill.column[column]].color = currentPill.colors[color];
     },
     findPillByCordinates(rows,columns){
         let pill = this.pillsOnMap.find((i)=>{
