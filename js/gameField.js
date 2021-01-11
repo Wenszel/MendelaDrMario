@@ -63,6 +63,9 @@ var gameField = {
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
         }
+        let scoreBoard = document.createElement("div");
+        scoreBoard.classList.add("scoreboard");
+        document.body.appendChild(scoreBoard)
     },
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -149,6 +152,8 @@ var gameField = {
             virusOnMap.forEach((virus)=>{
                 if(elements[virus.row][virus.column].empty){
                     localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
+                    
+                    document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
                 }
             });    
         }
