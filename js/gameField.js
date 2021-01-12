@@ -102,13 +102,14 @@ var gameField = {
     changePillElementsColor(pill, defaultColor){
         let {elements} = gameField;
         if(defaultColor){
-            var colors= ["","","",""];
+            var colors= ["","","","",""];
         }else{
             var colors = [
                 "url('gfx/"+pill.colors[0]+"_left.png')",
                 "url('gfx/"+pill.colors[1]+"_right.png')",
                 "url('gfx/"+pill.colors[0]+"_down.png')",
-                "url('gfx/"+pill.colors[1]+"_up.png')"
+                "url('gfx/"+pill.colors[1]+"_up.png')",
+                "url('gfx/"+pill.colors[0]+"_dot.png')"
             ]
         }
         if(pill.direction=="horizontal"){
@@ -118,6 +119,9 @@ var gameField = {
         else if(pill.direction=="vertical"){
             elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[2];
             elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = colors[3];
+        }
+        else if(pill.direction=="dot"){
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[4];
         }
     },
     breakBlocks(row, column){
@@ -145,6 +149,21 @@ var gameField = {
                 elements[cordinates[0]][cordinates[1]].color = null;
                 elements[cordinates[0]][cordinates[1]].empty = true;
                 elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
+                let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
+                if(breakingPill!=undefined){
+                console.log(breakingPill);
+                if(breakingPill.direction=="vertical"){
+                    let index = breakingPill.row.indexOf(cordinates[0])
+                    breakingPill.row.splice(index, 1);
+                }else{
+                    let index = breakingPill.column.indexOf(cordinates[1])
+                    breakingPill.column.splice(index, 1);
+                }
+                breakingPill.direction="dot";
+                console.log(breakingPill);
+                gameField.changePillElementsColor(breakingPill, false);
+            }
+                
             }
             sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
