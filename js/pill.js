@@ -11,7 +11,7 @@ class pill {
         this.direction = "horizontal";
         this.canMove = true;
         gameField.changePillElementsColor(this);
-        gameField.createFallingInterval(config.speed);
+        gameField.createFallingInterval(config.speed, this);
     } 
     fallOnce(){
         gameField.changePillElementsColor(this, true);
@@ -42,6 +42,7 @@ class pill {
         }
     }
     rotate(side){
+        if(this.canMove){
         if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||
             (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]+1].empty)){
             gameField.changePillElementsColor(this, true);
@@ -63,6 +64,7 @@ class pill {
             }
             gameField.changePillElementsColor(this, false);
         }
+    }
     }
     isFallible(){
         //check if fields below pill are empty and in rows scope
