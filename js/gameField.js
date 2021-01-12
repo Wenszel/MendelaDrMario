@@ -1,7 +1,8 @@
 "strict mode";
+//TODO: one color error
 var gameField = {
     fieldDiv: document.createElement("div"),
-    currentPill: new pill(),
+    currentPill: null,
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
@@ -10,14 +11,15 @@ var gameField = {
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
-        this.currentPill.generate();
+        this.currentPill = new pill();
+        //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
             const key = event.key;
             switch(key){
                 case "ArrowDown": 
                 case "s":
                     gameField.currentPill.canMove = false;
-                    gameField.createFallingInterval(25);
+                    gameField.createFallingInterval(25, gameField.currentPill);
                     break;
                 case "ArrowLeft":
                 case "a":
@@ -56,77 +58,148 @@ var gameField = {
             this.elements.push(rowArray);
         }
         document.body.appendChild(this.fieldDiv);
+        //generate viruses based on information in config
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
-            newVirus.generate();
         }
+        let scoreBoard = document.createElement("div");
+        scoreBoard.classList.add("scoreboard");
+        document.body.appendChild(scoreBoard)
     },
-    createFallingInterval(time){
+    createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            gameField.currentPill.fallOnce();  
-            if (!gameField.currentPill.isFallible(gameField.currentPill.row[gameField.currentPill.row.length-1], gameField.currentPill.column[0])){
-                gameField.elementLanded(0,0,0);
-                if (gameField.currentPill.direction=="horizontal") gameField.elementLanded(0,1,1);
-                else gameField.elementLanded(1,0,1);
-                gameField.pillsOnMap.push(gameField.currentPill);
-                gameField.fallElements();
-                gameField.currentPill=new pill();
-                gameField.currentPill.generate();
-            }    
+            let {pillsOnMap, currentPill, elementLanded, breakBlocks} = gameField;
+            //condition that handle situation when pill cant keep falling
+            if (fallingPill.isFallible()){
+                fallingPill.fallOnce();     
+            }else{
+                elementLanded(0,0,0);
+                if (fallingPill.direction=="horizontal") {
+                    elementLanded(0,1,1);
+                    breakBlocks(fallingPill.row[0], fallingPill.column[1]);
+                }
+                else {
+                    elementLanded(1,0,1);
+                    breakBlocks(fallingPill.row[1], fallingPill.column[0]);
+                }
+                breakBlocks(fallingPill.row[0], fallingPill.column[0]);
+                
+                if(currentPill==fallingPill){
+                    pillsOnMap.push(fallingPill);
+                    gameField.fallElements();
+                
+                if(currentPill.row==0){
+                    let gameoverImage = new Image();
+                    gameoverImage.src="gfx/gameover.png"
+                    gameoverImage.classList.add("gameover-image");
+                    document.body.appendChild(gameoverImage);
+                    clearInterval(gameField.fallingInterval);
+                }else{
+                    gameField.currentPill=new pill();
+                }
+                }
+            }        
         },time);
     }, 
     changePillElementsColor(pill, defaultColor){
+        let {elements} = gameField;
         if(defaultColor){
-            var colors= ["",""];
+            var colors= ["","","","",""];
         }else{
-            var colors = pill.colors
+            var colors = [
+                "url('gfx/"+pill.colors[0]+"_left.png')",
+                "url('gfx/"+pill.colors[1]+"_right.png')",
+                "url('gfx/"+pill.colors[0]+"_down.png')",
+                "url('gfx/"+pill.colors[1]+"_up.png')",
+                "url('gfx/"+pill.colors[0]+"_dot.png')"
+            ]
         }
         if(pill.direction=="horizontal"){
-            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[0]+"_left.png')";
-            gameField.elements[pill.row[0]][pill.column[1]].elementDiv.style.backgroundImage = "url('gfx/"+colors[1]+"_right.png')";
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[0];
+            elements[pill.row[0]][pill.column[1]].elementDiv.style.backgroundImage = colors[1];
         }
         else if(pill.direction=="vertical"){
-            gameField.elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[0]+"_down.png')";
-            gameField.elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = "url('gfx/"+colors[1]+"_up.png')";
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[2];
+            elements[pill.row[1]][pill.column[0]].elementDiv.style.backgroundImage = colors[3];
+        }
+        else if(pill.direction=="dot"){
+            elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[4];
         }
     },
     breakBlocks(row, column){
         let sameColorElementsHorizontal = [];
         let sameColorElementsVertical = [];
+        let {elements, virusOnMap} = gameField;
         for(let i = 0; i+row<config.rows; i++){
-            if(gameField.elements[row][column].color != gameField.elements[row+i][column].color) break;
+            if(elements[row][column].color != elements[row+i][column].color) break;
             sameColorElementsVertical.push([row+i,column]);
         }
-        for(let i = 0; i-row>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row-i][column].color) break;
-            sameColorElementsVertical.push([row-i,column]);
+        for(let i = -1; row+i>=0; i--){
+            if(elements[row][column].color != elements[row+i][column].color) break;
+            sameColorElementsVertical.push([row+i,column]);
         }
-        for(let i = 0; i-column>=0; i--){
-            if(gameField.elements[row][column].color != gameField.elements[row][column-i].color) break;
-            sameColorElementsHorizontal.push([row,column-i]);
+        for(let i = 0; column+i>=0; i--){
+            if(elements[row][column].color != elements[row][column+i].color) break;
+            sameColorElementsHorizontal.push([row,column+i]);
         }
-        for(let i = 0; i+column<config.columns; i++){
-            if(gameField.elements[row][column].color != gameField.elements[row][column+i].color) break;
+        for(let i = 1; i+column<config.columns; i++){
+            if(elements[row][column].color != elements[row][column+i].color) break;
              sameColorElementsHorizontal.push([row,column+i]);
         }
         if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
             let breakElement = function(cordinates){
-                gameField.elements[cordinates[0]][cordinates[1]].color = null;
-                gameField.elements[cordinates[0]][cordinates[1]].empty = true;
-                gameField.elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
-            }
+                elements[cordinates[0]][cordinates[1]].color = null;
+                elements[cordinates[0]][cordinates[1]].empty = true;
+                elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
+                let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
+                if(breakingPill!=undefined){
+                    if(breakingPill.direction=="vertical"){
+                    let index = breakingPill.row.indexOf(cordinates[0])
+                    breakingPill.row.splice(index, 1);
+                    breakingPill.colors.splice(index, 1);
+                    }else{
+                    let index = breakingPill.column.indexOf(cordinates[1])
+                    breakingPill.column.splice(index, 1);   
+                    breakingPill.colors.splice(index, 1);
+                    }
+                breakingPill.direction="dot";
+                console.log(breakingPill);
+                if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
+                    gameField.changePillElementsColor(breakingPill, false);
+                }
+                }
+            } 
+            
             sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
             sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+            localStorage.setItem("points",0);
+            virusOnMap.forEach((virus)=>{
+                if(elements[virus.row][virus.column].empty){
+                    localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
+                    
+                    document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
+                }
+            });    
         }
     },
+    //set gamefield elements as taken by pill and checks if blocks can be break
     elementLanded(row,column,color){
-        gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].empty = false;
-        gameField.elements[gameField.currentPill.row[row]][gameField.currentPill.column[column]].color = gameField.currentPill.colors[color];
-        gameField.breakBlocks(gameField.currentPill.row[row], gameField.currentPill.column[column]);
+        let {elements, currentPill} = gameField;
+        elements[currentPill.row[row]][currentPill.column[column]].empty = false;
+        elements[currentPill.row[row]][currentPill.column[column]].color = currentPill.colors[color];
+    },
+    findPillByCordinates(rows,columns){
+        let pill = this.pillsOnMap.find((i)=>{
+            i.row=rows;
+            i.column=columns;
+        });
+        return pill;
     },
     fallElements(){
-
+        gameField.pillsOnMap.forEach(pill=>{
+            gameField.createFallingInterval(10,pill);
+        });
     }
 };
