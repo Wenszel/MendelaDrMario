@@ -75,18 +75,10 @@ var gameField = {
                 fallingPill.fallOnce();     
             }else{
                 fallingPill.landed();
-                if (fallingPill.direction=="horizontal") {
-                    breakBlocks(fallingPill.row[0], fallingPill.column[1]);
-                }
-                else {
-                    breakBlocks(fallingPill.row[1], fallingPill.column[0]);
-                }
-                breakBlocks(fallingPill.row[0], fallingPill.column[0]);
-                
+                breakBlocks(fallingPill);
                 if(currentPill==fallingPill){
                     pillsOnMap.push(fallingPill);
                     gameField.fallElements();
-                
                 if(currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -125,58 +117,67 @@ var gameField = {
             elements[pill.row[0]][pill.column[0]].elementDiv.style.backgroundImage = colors[4];
         }
     },
-    breakBlocks(row, column){
-        let sameColorElementsHorizontal = [];
-        let sameColorElementsVertical = [];
-        let {elements, virusOnMap} = gameField;
-        for(let i = 0; i+row<config.rows; i++){
-            if(elements[row][column].color != elements[row+i][column].color) break;
-            sameColorElementsVertical.push([row+i,column]);
-        }
-        for(let i = -1; row+i>=0; i--){
-            if(elements[row][column].color != elements[row+i][column].color) break;
-            sameColorElementsVertical.push([row+i,column]);
-        }
-        for(let i = 0; column+i>=0; i--){
-            if(elements[row][column].color != elements[row][column+i].color) break;
-            sameColorElementsHorizontal.push([row,column+i]);
-        }
-        for(let i = 1; i+column<config.columns; i++){
-            if(elements[row][column].color != elements[row][column+i].color) break;
-             sameColorElementsHorizontal.push([row,column+i]);
-        }
-        if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
-            let breakElement = function(cordinates){
-                elements[cordinates[0]][cordinates[1]].color = null;
-                elements[cordinates[0]][cordinates[1]].empty = true;
-                elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
-                let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
-                if(breakingPill!=undefined){
-                    if(breakingPill.direction=="vertical"){
-                    let index = breakingPill.row.indexOf(cordinates[0])
-                    breakingPill.row.splice(index, 1);
-                    breakingPill.colors.splice(index, 1);
-                    }else{
-                    let index = breakingPill.column.indexOf(cordinates[1])
-                    breakingPill.column.splice(index, 1);   
-                    breakingPill.colors.splice(index, 1);
+    breakBlocks(pill){
+        let breakBlocksMethod = (row, column)=>{
+            let sameColorElementsHorizontal = [];
+            let sameColorElementsVertical = [];
+            let {elements, virusOnMap} = gameField;
+            for(let i = 0; i+row<config.rows; i++){
+                if(elements[row][column].color != elements[row+i][column].color) break;
+                sameColorElementsVertical.push([row+i,column]);
+            }
+            for(let i = -1; row+i>=0; i--){
+                if(elements[row][column].color != elements[row+i][column].color) break;
+                sameColorElementsVertical.push([row+i,column]);
+            }
+            for(let i = 0; column+i>=0; i--){
+                if(elements[row][column].color != elements[row][column+i].color) break;
+                sameColorElementsHorizontal.push([row,column+i]);
+            }
+            for(let i = 1; i+column<config.columns; i++){
+                if(elements[row][column].color != elements[row][column+i].color) break;
+                sameColorElementsHorizontal.push([row,column+i]);
+            }
+            if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
+                let breakElement = function(cordinates){
+                    elements[cordinates[0]][cordinates[1]].color = null;
+                    elements[cordinates[0]][cordinates[1]].empty = true;
+                    elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
+                    let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
+                    if(breakingPill!=undefined){
+                        if(breakingPill.direction=="vertical"){
+                        let index = breakingPill.row.indexOf(cordinates[0])
+                        breakingPill.row.splice(index, 1);
+                        breakingPill.colors.splice(index, 1);
+                        }else{
+                        let index = breakingPill.column.indexOf(cordinates[1])
+                        breakingPill.column.splice(index, 1);   
+                        breakingPill.colors.splice(index, 1);
+                        }
+                    breakingPill.direction="dot";
+                    if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
+                        gameField.changePillElementsColor(breakingPill, false);
                     }
-                breakingPill.direction="dot";
-                if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
-                    gameField.changePillElementsColor(breakingPill, false);
+                    }
+                }    
+            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+                localStorage.setItem("points",0);
+                virusOnMap.forEach((virus)=>{
+                    if(elements[virus.row][virus.column].empty){
+                        localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
+                        
+                        document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
+                    }
+                });    
                 }
-                }
-            }    
-           sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-           sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
-            localStorage.setItem("points",0);
-            virusOnMap.forEach((virus)=>{
-                if(elements[virus.row][virus.column].empty){
-                    localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
-                    
-                    document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
-                }
-            });    
+            }
+        if(pill.row.length>pill.column.length){
+            pill.row.forEach(item => breakBlocksMethod(item, pill.column[0]));
+        }else if(pill.row.length<pill.column.length){
+            pill.column.forEach(item => breakBlocksMethod(pill.row[0], item));
+        }else if(pill.row.length==this.column.length){
+            breakBlocksMethod(pill.row[0], pill.column[0]);
         }
     },
     findPillByCordinates(rows,columns){
