@@ -75,10 +75,11 @@ var gameField = {
                 fallingPill.fallOnce();     
             }else{
                 fallingPill.landed();
+                pillsOnMap.push(fallingPill);
                 breakBlocks(fallingPill);
                 if(currentPill==fallingPill){
-                    pillsOnMap.push(fallingPill);
-                    gameField.fallElements();
+                    
+                   // gameField.fallElements();
                 if(currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -157,11 +158,14 @@ var gameField = {
                     breakingPill.direction="dot";
                     if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
                         gameField.changePillElementsColor(breakingPill, false);
+                    }else{
+                        gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1);
                     }
                     }
                 }    
-            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+                    sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+                    sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+           
                 localStorage.setItem("points",0);
                 virusOnMap.forEach((virus)=>{
                     if(elements[virus.row][virus.column].empty){
