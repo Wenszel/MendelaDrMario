@@ -77,13 +77,19 @@ class pill {
                 }else{
                     return false;
                 }
-            }else{
+            }else if(this.direction=="vertical"){
                 if(gameField.elements[row+2][column].empty){
                     return true;
                 }else{
                     return false;
                 }  
-            }   
+            }else{
+                if(gameField.elements[row+1][column].empty){
+                    return true;
+                }else{
+                    return false;
+                }  
+            } 
         }catch (error){
             if (error instanceof TypeError){
                 return false;
@@ -102,6 +108,19 @@ class pill {
             this.column.forEach((item, index) => changeElementProperties(this.row[0], item, index));
         }else if(this.row.length==this.column.length){
             changeElementProperties(this.row[0], this.column[0], 0);
+        }
+    }
+    released(){
+        let changeElementProperties = (row, column) => {
+            gameField.elements[row][column].empty = true;
+            gameField.elements[row][column].color = null;
+        }
+        if(this.row.length>this.column.length){
+            this.row.forEach((item) => changeElementProperties(item, this.column[0]));
+        }else if(this.row.length<this.column.length){
+            this.column.forEach((item) => changeElementProperties(this.row[0], item));
+        }else if(this.row.length==this.column.length){
+            changeElementProperties(this.row[0], this.column[0]);
         }
     }
     static generateColors(){

@@ -67,7 +67,7 @@ var gameField = {
         document.body.appendChild(scoreBoard)
     },
     createFallingInterval(time, fallingPill){
-        clearInterval(gameField.fallingInterval)
+            clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
             let {pillsOnMap, currentPill, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
@@ -79,7 +79,7 @@ var gameField = {
                 breakBlocks(fallingPill);
                 if(currentPill==fallingPill){
                     
-                   // gameField.fallElements();
+                   gameField.fallElements();
                 if(currentPill.row==0){
                     let gameoverImage = new Image();
                     gameoverImage.src="gfx/gameover.png"
@@ -155,22 +155,21 @@ var gameField = {
                         breakingPill.column.splice(index, 1);   
                         breakingPill.colors.splice(index, 1);
                         }
-                    breakingPill.direction="dot";
-                    if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
-                        gameField.changePillElementsColor(breakingPill, false);
-                    }else{
-                        gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1);
-                    }
+                        breakingPill.direction="dot";
+                        if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
+                            gameField.changePillElementsColor(breakingPill, false);
+                        }else{
+                            gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1);
+                        }
                     }
                 }    
-                    sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-                    sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
-           
+                sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+                sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+
                 localStorage.setItem("points",0);
                 virusOnMap.forEach((virus)=>{
                     if(elements[virus.row][virus.column].empty){
                         localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
-                        
                         document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
                     }
                 });    
@@ -180,7 +179,7 @@ var gameField = {
             pill.row.forEach(item => breakBlocksMethod(item, pill.column[0]));
         }else if(pill.row.length<pill.column.length){
             pill.column.forEach(item => breakBlocksMethod(pill.row[0], item));
-        }else if(pill.row.length==this.column.length){
+        }else if(pill.row.length==pill.column.length){
             breakBlocksMethod(pill.row[0], pill.column[0]);
         }
     },
@@ -192,8 +191,18 @@ var gameField = {
         return pill;
     },
     fallElements(){
-        gameField.pillsOnMap.forEach(pill=>{
-            gameField.createFallingInterval(10,pill);
+        gameField.pillsOnMap.forEach(fallingPill=>{
+            fallingPill.released();
+            let interval = setInterval(function(){
+                if (fallingPill.isFallible()){
+                    fallingPill.fallOnce();     
+                }else{
+                    fallingPill.landed();
+                    gameField.breakBlocks(fallingPill); 
+                    //if(isBrokenAnyPill)gameField.fallElements();
+                    clearInterval(interval);
+                }        
+            },50);  
         });
     }
 };
