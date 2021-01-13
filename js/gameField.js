@@ -1,5 +1,4 @@
 "strict mode";
-//TODO: one color error
 var gameField = {
     fieldDiv: document.createElement("div"),
     currentPill: null,
@@ -70,18 +69,16 @@ var gameField = {
     createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            let {pillsOnMap, currentPill, elementLanded, breakBlocks} = gameField;
+            let {pillsOnMap, currentPill, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
             if (fallingPill.isFallible()){
                 fallingPill.fallOnce();     
             }else{
-                elementLanded(0,0,0);
+                fallingPill.landed();
                 if (fallingPill.direction=="horizontal") {
-                    elementLanded(0,1,1);
                     breakBlocks(fallingPill.row[0], fallingPill.column[1]);
                 }
                 else {
-                    elementLanded(1,0,1);
                     breakBlocks(fallingPill.row[1], fallingPill.column[0]);
                 }
                 breakBlocks(fallingPill.row[0], fallingPill.column[0]);
@@ -165,15 +162,13 @@ var gameField = {
                     breakingPill.colors.splice(index, 1);
                     }
                 breakingPill.direction="dot";
-                console.log(breakingPill);
                 if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
                     gameField.changePillElementsColor(breakingPill, false);
                 }
                 }
-            } 
-            
-            sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-            sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
+            }    
+           sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
+           sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
             localStorage.setItem("points",0);
             virusOnMap.forEach((virus)=>{
                 if(elements[virus.row][virus.column].empty){
@@ -183,12 +178,6 @@ var gameField = {
                 }
             });    
         }
-    },
-    //set gamefield elements as taken by pill and checks if blocks can be break
-    elementLanded(row,column,color){
-        let {elements, currentPill} = gameField;
-        elements[currentPill.row[row]][currentPill.column[column]].empty = false;
-        elements[currentPill.row[row]][currentPill.column[column]].color = currentPill.colors[color];
     },
     findPillByCordinates(rows,columns){
         let pill = this.pillsOnMap.find((i)=>{

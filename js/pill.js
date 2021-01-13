@@ -90,6 +90,20 @@ class pill {
             }   
         }
     }
+    //set gamefield elements as taken by pill and checks if blocks can be break
+    landed(){
+        let changeElementProperties = (row, column, color) => {
+            gameField.elements[row][column].empty = false;
+            gameField.elements[row][column].color = this.colors[color];
+        }
+        if(this.row.length>this.column.length){
+            this.row.forEach((item, index) => changeElementProperties(item, this.column[0], index));
+        }else if(this.row.length<this.column.length){
+            this.column.forEach((item, index) => changeElementProperties(this.row[0], item, index));
+        }else if(this.row.length==this.column.length){
+            changeElementProperties(this.row[0], this.column[0], 0);
+        }
+    }
     static generateColors(){
         let colors = [];
         for(let i = 0; i<2; i++){
