@@ -5,6 +5,7 @@ var gameField = {
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
+    level: 1,
     fallingInterval: null,
     startGame(){
         document.getElementById("main-page").style.display="none";
@@ -62,6 +63,8 @@ var gameField = {
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
         }
+        //delete logo
+        document.getElementById("logo").style.display="none";
         //create scoreboard
         let scoreboard = document.getElementById("scoreboard");
         scoreboard.style.display="block";
@@ -91,6 +94,20 @@ var gameField = {
                 yellow.style.display="none";
             }
         },1000)
+        //create game info table
+        let gameinfo = document.getElementById("game-info");
+        gameinfo.style.display="block";
+        let levelinfo = document.getElementById("level");
+        let speedinfo = document.getElementById("speed");
+        let virusAmount = document.getElementById("virus-amount");
+        if(parseInt(levelinfo.innerText)>9){
+            levelinfo.innerText=gameField.level;
+        }else{
+            levelinfo.innerText="0"+gameField.level;
+        }
+        virusAmount.innerText=gameField.virusOnMap.length;
+        let doctor = document.getElementById("doctor");
+        doctor.style.display="block";
     },
      createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
@@ -112,6 +129,7 @@ var gameField = {
                         document.body.appendChild(gameoverImage);
                         clearInterval(gameField.fallingInterval);
                     }else if(virusOnMap.length==0){
+                        gameField.level++;
                         let stageComplitedImage = new Image();
                         stageComplitedImage.src="gfx/stagecompleted.png"
                         stageComplitedImage.classList.add("gameinfo-image");
@@ -178,6 +196,8 @@ var gameField = {
                     if(virus!=undefined){
                         elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_x.png')" 
                         gameField.virusOnMap.splice(gameField.virusOnMap.indexOf(virus),1);
+                        document.getElementById("virus-amount").innerText=gameField.virusOnMap.length;
+
                         }
                     else{
                         elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_o.png')"
