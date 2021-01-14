@@ -62,12 +62,14 @@ var gameField = {
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
         }
+        //create scoreboard
         let scoreBoard = document.createElement("div");
         scoreBoard.classList.add("scoreboard");
-        document.body.appendChild(scoreBoard)
+        scoreBoard.textContent = 0;
+        document.body.appendChild(scoreBoard);
     },
-    createFallingInterval(time, fallingPill){
-            clearInterval(gameField.fallingInterval)
+     createFallingInterval(time, fallingPill){
+        clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
             let {pillsOnMap, currentPill, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
@@ -77,18 +79,17 @@ var gameField = {
                 fallingPill.landed();
                 pillsOnMap.push(fallingPill);
                 breakBlocks(fallingPill);
-                if(currentPill==fallingPill){
-                    
-                   gameField.fallElements();
-                if(currentPill.row==0){
-                    let gameoverImage = new Image();
-                    gameoverImage.src="gfx/gameover.png"
-                    gameoverImage.classList.add("gameover-image");
-                    document.body.appendChild(gameoverImage);
-                    clearInterval(gameField.fallingInterval);
-                }else{
-                    gameField.currentPill=new pill();
-                }
+                if(currentPill==fallingPill){ 
+                    gameField.fallElements();
+                    if(currentPill.row==0){
+                        let gameoverImage = new Image();
+                        gameoverImage.src="gfx/gameover.png"
+                        gameoverImage.classList.add("gameover-image");
+                        document.body.appendChild(gameoverImage);
+                        clearInterval(gameField.fallingInterval);
+                    }else{
+                        gameField.currentPill=new pill();
+                    }
                 }
             }        
         },time);
@@ -119,7 +120,7 @@ var gameField = {
         }
     },
     breakBlocks(pill){
-        let breakBlocksMethod = (row, column)=>{
+        let breakBlocksMethod = function(row, column){
             let sameColorElementsHorizontal = [];
             let sameColorElementsVertical = [];
             let {elements, virusOnMap} = gameField;
@@ -140,20 +141,30 @@ var gameField = {
                 sameColorElementsHorizontal.push([row,column+i]);
             }
             if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
-                let breakElement = function(cordinates){
+                let breakElement = function(cordinates){  
+                    let virus = virusOnMap.find(i=>{
+                        if(i.row==cordinates[0] && i.column==cordinates[1]) return true;
+                    });
+                    if(virus!=undefined){
+                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_x.png')" 
+                        gameField.virusOnMap.splice(gameField.virusOnMap.indexOf(virus),1);
+                        }
+                    else{
+                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_o.png')"
+                    }
                     elements[cordinates[0]][cordinates[1]].color = null;
-                    elements[cordinates[0]][cordinates[1]].empty = true;
-                    elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null;
+                    elements[cordinates[0]][cordinates[1]].empty = true;   
+                    setTimeout(function(){elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null},50);
                     let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
                     if(breakingPill!=undefined){
                         if(breakingPill.direction=="vertical"){
-                        let index = breakingPill.row.indexOf(cordinates[0])
-                        breakingPill.row.splice(index, 1);
-                        breakingPill.colors.splice(index, 1);
+                            let index = breakingPill.row.indexOf(cordinates[0])
+                            breakingPill.row.splice(index, 1);
+                            breakingPill.colors.splice(index, 1);
                         }else{
-                        let index = breakingPill.column.indexOf(cordinates[1])
-                        breakingPill.column.splice(index, 1);   
-                        breakingPill.colors.splice(index, 1);
+                            let index = breakingPill.column.indexOf(cordinates[1])
+                            breakingPill.column.splice(index, 1);   
+                            breakingPill.colors.splice(index, 1);
                         }
                         breakingPill.direction="dot";
                         if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){
@@ -163,16 +174,13 @@ var gameField = {
                         }
                     }
                 }    
+                sameColorElementsHorizontal.splice(0,1);
                 sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
                 sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
 
-                localStorage.setItem("points",0);
-                virusOnMap.forEach((virus)=>{
-                    if(elements[virus.row][virus.column].empty){
-                        localStorage.setItem("points",parseInt(localStorage.getItem("points"))+100);
-                        document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
-                    }
-                });    
+                localStorage.setItem("points",(config.virusAmount-virusOnMap.length)*100);
+                //document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
+
                 }
             }
         if(pill.row.length>pill.column.length){
@@ -202,7 +210,7 @@ var gameField = {
                     //if(isBrokenAnyPill)gameField.fallElements();
                     clearInterval(interval);
                 }        
-            },50);  
+            },60);  
         });
     }
 };
