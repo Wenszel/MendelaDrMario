@@ -9,7 +9,7 @@ var gameField = {
     level: 1,
     startGame(){
         document.getElementById("main-page").style.display="none";
-        document.body.style.backgroundImage="url('gfx/game-pattern.png')";
+        document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-1.png')";
         this.initiate();
         gameInterface.initiate();
         //checks which keys were pressed and changes the position of the pill
@@ -39,15 +39,33 @@ var gameField = {
             }  
         };
     },
-    nextLevel(){
-        gameField.currentPill= null;
-        gameField.pillsOnMap= [];
-        gameField.virusOnMap= [];
-        gameField.elements= [];
-        gameField.fallingInterval= null;
-        gameField.level++;
-        document.body.removeChild(gameField.fieldDiv);
-        gameField.initiate();
+    stageCompleted(){
+        let stageComplitedImage = new Image();
+        stageComplitedImage.src="gfx/stagecompleted.png"
+        stageComplitedImage.classList.add("gameinfo-image");
+        document.body.appendChild(stageComplitedImage);
+        clearInterval(gameField.fallingInterval);
+        setTimeout(()=>{
+            document.body.removeChild(stageComplitedImage);
+            gameInterface.changeLevel();
+            document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-"+gameField.level+".png')";
+            config.virusAmount++;
+            gameField.currentPill= null;
+            gameField.pillsOnMap= [];
+            gameField.virusOnMap= [];
+            gameField.elements= [];
+            gameField.fallingInterval= null;
+            document.body.removeChild(gameField.fieldDiv);
+            gameField.initiate();
+        },1000);
+    },
+    gameOver(){
+        let gameoverImage = new Image();
+        gameoverImage.src="gfx/gameover.png"
+        gameoverImage.classList.add("gameinfo-image");
+        gameInterface.doctor.style.backgroundImage= 'url("gfx/gameover_doctor.png")';
+        document.body.appendChild(gameoverImage);
+        clearInterval(gameField.fallingInterval);
     },
     initiate(){ // create game field and fill up elements array
         this.fieldDiv=document.createElement("div")
@@ -76,40 +94,25 @@ var gameField = {
         }
         this.currentPill = new pill();
     },
-     createFallingInterval(time, fallingPill){
+     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
             let {pillsOnMap, currentPill, virusOnMap, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
-            if (fallingPill.isFallible()){
-                fallingPill.fallOnce();     
+            if (currentPill.isFallible()){
+                currentPill.fallOnce();     
             }else{
-                fallingPill.landed();
-                pillsOnMap.push(fallingPill);
-                breakBlocks(fallingPill);
-                if(currentPill==fallingPill){ 
-                    gameField.fallElements();
-                    if(currentPill.row==0){
-                        let gameoverImage = new Image();
-                        gameoverImage.src="gfx/gameover.png"
-                        gameoverImage.classList.add("gameinfo-image");
-                        document.body.appendChild(gameoverImage);
-                        clearInterval(gameField.fallingInterval);
-                    }else if(virusOnMap.length==0){
-                        let stageComplitedImage = new Image();
-                        stageComplitedImage.src="gfx/stagecompleted.png"
-                        stageComplitedImage.classList.add("gameinfo-image");
-                        document.body.appendChild(stageComplitedImage);
-                        clearInterval(gameField.fallingInterval);
-                        setTimeout(()=>{
-                            document.body.removeChild(stageComplitedImage);
-                            gameField.nextLevel();
-                            config.virusAmount++;
-                        },1000);
-                    }else{
-                        gameField.currentPill=new pill();
-                    }
-                }
+                currentPill.landed();
+                pillsOnMap.push(currentPill);
+                breakBlocks(currentPill);
+                gameField.fallElements();
+                if(currentPill.row==0){
+                    gameField.gameOver();
+                }else if(virusOnMap.length==0){
+                    gameField.stageCompleted();
+                }else{
+                    gameField.currentPill=new pill();
+                }    
             }        
         },time);
     }, 

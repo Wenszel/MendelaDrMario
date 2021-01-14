@@ -45,12 +45,18 @@ var gameInterface={
         },1000)
         //create game info table
         this.gameinfo.style.display="block";
+        this.virusAmount.innerText=gameField.virusOnMap.length;
+        this.doctor.style.display="block";
+    },changeLevel(){
+        gameField.level++;
+        this.blueVirus.style.display="block";
+        this.brownVirus.style.display="block";
+        this.yellowVirus.style.display="block";
+        //when level is below 10 adds 0 in front of number
         if(parseInt(this.levelinfo.innerText)>9){
             this.levelinfo.innerText=gameField.level;
         }else{
             this.levelinfo.innerText="0"+gameField.level;
         }
-        this.virusAmount.innerText=gameField.virusOnMap.length;
-        this.doctor.style.display="block";
     }
 }
