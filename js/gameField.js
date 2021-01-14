@@ -1,17 +1,17 @@
 "strict mode";
 var gameField = {
-    fieldDiv: document.createElement("div"),
+    fieldDiv: null,
     currentPill: null,
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
-    level: 1,
     fallingInterval: null,
+    level: 1,
     startGame(){
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/game-pattern.png')";
         this.initiate();
-        this.currentPill = new pill();
+        gameInterface.initiate();
         //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
             const key = event.key;
@@ -39,7 +39,18 @@ var gameField = {
             }  
         };
     },
+    nextLevel(){
+        gameField.currentPill= null;
+        gameField.pillsOnMap= [];
+        gameField.virusOnMap= [];
+        gameField.elements= [];
+        gameField.fallingInterval= null;
+        gameField.level++;
+        document.body.removeChild(gameField.fieldDiv);
+        gameField.initiate();
+    },
     initiate(){ // create game field and fill up elements array
+        this.fieldDiv=document.createElement("div")
         this.fieldDiv.id = "playground";
         for(let i = 0; i<config.rows; i++){
             let rowArray = [];
@@ -63,51 +74,7 @@ var gameField = {
             let newVirus = new virus();
             this.virusOnMap.push(newVirus);
         }
-        //delete logo
-        document.getElementById("logo").style.display="none";
-        //create scoreboard
-        let scoreboard = document.getElementById("scoreboard");
-        scoreboard.style.display="block";
-        let topScore = document.getElementById("top-score")
-        //create loupe animation
-        let loupe = document.getElementById("loupe");
-        loupe.style.display="block";
-        let blue = document.getElementById("blue-loupe");
-        let brown = document.getElementById("brown-loupe");
-        let yellow = document.getElementById("yellow-loupe");
-        let counter = 0;
-        setInterval(()=>{
-            counter++
-            if(this.virusOnMap.find(i => i.color=="blue")){
-                blue.src="gfx/loupe/bl/"+counter%3+".png"
-            }else{
-                blue.style.display="none";
-            }
-            if(this.virusOnMap.find(i => i.color=="brown")){
-                brown.src="gfx/loupe/br/"+counter%3+".png"
-            }else{
-                brown.style.display="none";
-            }
-            if(this.virusOnMap.find(i => i.color=="yellow")){
-                yellow.src="gfx/loupe/yl/"+counter%3+".png"
-            }else{
-                yellow.style.display="none";
-            }
-        },1000)
-        //create game info table
-        let gameinfo = document.getElementById("game-info");
-        gameinfo.style.display="block";
-        let levelinfo = document.getElementById("level");
-        let speedinfo = document.getElementById("speed");
-        let virusAmount = document.getElementById("virus-amount");
-        if(parseInt(levelinfo.innerText)>9){
-            levelinfo.innerText=gameField.level;
-        }else{
-            levelinfo.innerText="0"+gameField.level;
-        }
-        virusAmount.innerText=gameField.virusOnMap.length;
-        let doctor = document.getElementById("doctor");
-        doctor.style.display="block";
+        this.currentPill = new pill();
     },
      createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
@@ -129,12 +96,16 @@ var gameField = {
                         document.body.appendChild(gameoverImage);
                         clearInterval(gameField.fallingInterval);
                     }else if(virusOnMap.length==0){
-                        gameField.level++;
                         let stageComplitedImage = new Image();
                         stageComplitedImage.src="gfx/stagecompleted.png"
                         stageComplitedImage.classList.add("gameinfo-image");
                         document.body.appendChild(stageComplitedImage);
                         clearInterval(gameField.fallingInterval);
+                        setTimeout(()=>{
+                            document.body.removeChild(stageComplitedImage);
+                            gameField.nextLevel();
+                            config.virusAmount++;
+                        },1000);
                     }else{
                         gameField.currentPill=new pill();
                     }
@@ -234,7 +205,9 @@ var gameField = {
                 while(currentScore.innerText.length<5){
                     currentScore.innerText = "0"+currentScore.innerText
                 }
-
+                return true;
+                }else{
+                    return false;
                 }
             }
         if(pill.row.length>pill.column.length){
@@ -260,8 +233,8 @@ var gameField = {
                     fallingPill.fallOnce();     
                 }else{
                     fallingPill.landed();
-                    gameField.breakBlocks(fallingPill); 
-                    //if(isBrokenAnyPill)gameField.fallElements();
+                    isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
+                    if(isBrokenAnyPill)gameField.fallElements();
                     clearInterval(interval);
                 }        
             },60);  
