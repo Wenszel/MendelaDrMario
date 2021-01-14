@@ -71,7 +71,7 @@ var gameField = {
      createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            let {pillsOnMap, currentPill, breakBlocks} = gameField;
+            let {pillsOnMap, currentPill, virusOnMap, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
             if (fallingPill.isFallible()){
                 fallingPill.fallOnce();     
@@ -84,8 +84,14 @@ var gameField = {
                     if(currentPill.row==0){
                         let gameoverImage = new Image();
                         gameoverImage.src="gfx/gameover.png"
-                        gameoverImage.classList.add("gameover-image");
+                        gameoverImage.classList.add("gameinfo-image");
                         document.body.appendChild(gameoverImage);
+                        clearInterval(gameField.fallingInterval);
+                    }else if(virusOnMap.length==0){
+                        let stageComplitedImage = new Image();
+                        stageComplitedImage.src="gfx/stagecompleted.png"
+                        stageComplitedImage.classList.add("gameinfo-image");
+                        document.body.appendChild(stageComplitedImage);
                         clearInterval(gameField.fallingInterval);
                     }else{
                         gameField.currentPill=new pill();
@@ -179,7 +185,7 @@ var gameField = {
                 sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
 
                 localStorage.setItem("points",(config.virusAmount-virusOnMap.length)*100);
-                //document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
+                document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
 
                 }
             }
