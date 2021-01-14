@@ -41,7 +41,7 @@ var gameField = {
     },
     stageCompleted(){
         let stageComplitedImage = new Image();
-        stageComplitedImage.src="gfx/stagecompleted.png"
+        stageComplitedImage.src="gfx/interface-elements/stagecompleted.png"
         stageComplitedImage.classList.add("gameinfo-image");
         document.body.appendChild(stageComplitedImage);
         clearInterval(gameField.fallingInterval);
@@ -61,9 +61,9 @@ var gameField = {
     },
     gameOver(){
         let gameoverImage = new Image();
-        gameoverImage.src="gfx/gameover.png"
+        gameoverImage.src="gfx/interface-elements/gameover.png"
         gameoverImage.classList.add("gameinfo-image");
-        gameInterface.doctor.style.backgroundImage= 'url("gfx/gameover_doctor.png")';
+        gameInterface.doctor.style.backgroundImage= 'url("gfx/interface-elements/gameover_doctor.png")';
         document.body.appendChild(gameoverImage);
         clearInterval(gameField.fallingInterval);
     },
@@ -122,11 +122,11 @@ var gameField = {
             var colors= ["","","","",""];
         }else{
             var colors = [
-                "url('gfx/"+pill.colors[0]+"_left.png')",
-                "url('gfx/"+pill.colors[1]+"_right.png')",
-                "url('gfx/"+pill.colors[0]+"_down.png')",
-                "url('gfx/"+pill.colors[1]+"_up.png')",
-                "url('gfx/"+pill.colors[0]+"_dot.png')"
+                "url('gfx/game-elements/"+pill.colors[0]+"_left.png')",
+                "url('gfx/game-elements/"+pill.colors[1]+"_right.png')",
+                "url('gfx/game-elements/"+pill.colors[0]+"_down.png')",
+                "url('gfx/game-elements/"+pill.colors[1]+"_up.png')",
+                "url('gfx/game-elements/"+pill.colors[0]+"_dot.png')"
             ]
         }
         if(pill.direction=="horizontal"){
@@ -168,13 +168,13 @@ var gameField = {
                         if(i.row==cordinates[0] && i.column==cordinates[1]) return true;
                     });
                     if(virus!=undefined){
-                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_x.png')" 
+                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/game-elements/"+elements[cordinates[0]][cordinates[1]].color+"_x.png')" 
                         gameField.virusOnMap.splice(gameField.virusOnMap.indexOf(virus),1);
                         document.getElementById("virus-amount").innerText=gameField.virusOnMap.length;
 
                         }
                     else{
-                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/"+elements[cordinates[0]][cordinates[1]].color+"_o.png')"
+                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/game-elements/"+elements[cordinates[0]][cordinates[1]].color+"_o.png')"
                     }
                     elements[cordinates[0]][cordinates[1]].color = null;
                     elements[cordinates[0]][cordinates[1]].empty = true;   

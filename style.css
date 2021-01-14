@@ -10,7 +10,7 @@ body{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url('./gfx/background-pattern.png');
+    background-image: url('gfx/gamepatterns/background-pattern.png');
     background-repeat: repeat;
     background-position: center;
     margin: 10px;
@@ -109,7 +109,7 @@ body{
 }
 #loupe{
     display: none;
-    background-image: url("gfx/loupe.png");
+    background-image: url("gfx/loupe/loupe.png");
     background-repeat: no-repeat;
     background-size: cover;
     width: 422px;
@@ -138,7 +138,7 @@ body{
 }
 #scoreboard{
     display: none;
-    background-image: url("gfx/scoreboard.png");
+    background-image: url("gfx/interface-elements/scoreboard.png");
     width: 207px;
     height: 157px;
     position: absolute;
@@ -157,7 +157,7 @@ body{
 }
 #game-info{
     display: none;
-    background-image: url("gfx/game-info.png");
+    background-image: url("gfx/interface-elements/game-info.png");
     position: absolute;
     right: 100px;
     bottom: 100px;
@@ -172,7 +172,7 @@ body{
 }
 #doctor{
     display: none;
-    background-image: url("gfx/doctor.png");
+    background-image: url("gfx/interface-elements/doctor.png");
     background-repeat: no-repeat;
     background-size: cover;
     height: 290px;
