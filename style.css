@@ -119,3 +119,32 @@ body{
     background-color: black;
     z-index: 1;
 }
+#loupe{
+    display: none;
+    background-image: url("gfx/loupe.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 422px;
+    height: 386px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+#blue-loupe{
+    position: absolute;
+    bottom: 100px;
+    left: 90px;
+    z-index: 1;
+}
+#brown-loupe{
+    position: absolute;
+    bottom: 220px;
+    left: 170px;
+    z-index: 1;
+}
+#yellow-loupe{
+    position: absolute;
+    bottom: 110px;
+    left: 220px;
+    z-index: 1;
+}

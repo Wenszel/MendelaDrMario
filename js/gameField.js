@@ -67,6 +67,31 @@ var gameField = {
         scoreBoard.classList.add("scoreboard");
         scoreBoard.textContent = 0;
         document.body.appendChild(scoreBoard);
+        //create loupe animation
+        let loupe = document.getElementById("loupe");
+        loupe.style.display="block";
+        let blue = document.getElementById("blue-loupe");
+        let brown = document.getElementById("brown-loupe");
+        let yellow = document.getElementById("yellow-loupe");
+        let counter = 0;
+        setInterval(()=>{
+            counter++
+            if(this.virusOnMap.find(i => i.color=="blue")){
+                blue.src="gfx/loupe/bl/"+counter%3+".png"
+            }else{
+                blue.style.display="none";
+            }
+            if(this.virusOnMap.find(i => i.color=="brown")){
+                brown.src="gfx/loupe/br/"+counter%3+".png"
+            }else{
+                brown.style.display="none";
+            }
+            if(this.virusOnMap.find(i => i.color=="yellow")){
+                yellow.src="gfx/loupe/yl/"+counter%3+".png"
+            }else{
+                yellow.style.display="none";
+            }
+        },1000)
     },
      createFallingInterval(time, fallingPill){
         clearInterval(gameField.fallingInterval)
