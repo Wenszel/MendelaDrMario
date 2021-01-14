@@ -63,10 +63,9 @@ var gameField = {
             this.virusOnMap.push(newVirus);
         }
         //create scoreboard
-        let scoreBoard = document.createElement("div");
-        scoreBoard.classList.add("scoreboard");
-        scoreBoard.textContent = 0;
-        document.body.appendChild(scoreBoard);
+        let scoreboard = document.getElementById("scoreboard");
+        scoreboard.style.display="block";
+        let topScore = document.getElementById("top-score")
         //create loupe animation
         let loupe = document.getElementById("loupe");
         loupe.style.display="block";
@@ -210,7 +209,11 @@ var gameField = {
                 sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
 
                 localStorage.setItem("points",(config.virusAmount-virusOnMap.length)*100);
-                document.getElementsByClassName("scoreboard")[0].textContent = localStorage.getItem("points");
+                let currentScore = document.getElementById("current-score");
+                currentScore.innerText = localStorage.getItem("points");
+                while(currentScore.innerText.length<5){
+                    currentScore.innerText = "0"+currentScore.innerText
+                }
 
                 }
             }

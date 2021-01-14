@@ -5,6 +5,8 @@
   }
 body{
     display: flex;
+    font-family: 'Press Start 2P', cursive;
+    color: #0073EE;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -79,9 +81,7 @@ body{
 }
 .menu-button{
     cursor: pointer;
-    color: #0073EE;
     font-size: 20px;
-    font-family: 'Press Start 2P', cursive;
     margin: 30px;
 }
 .menu-button:hover{
@@ -108,16 +108,6 @@ body{
     z-index: 1;
     align-self: center;
     justify-self: center;
-}
-.scoreboard{
-    color: white;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 300px;
-    height: 100px;
-    background-color: black;
-    z-index: 1;
 }
 #loupe{
     display: none;
@@ -147,4 +137,23 @@ body{
     bottom: 110px;
     left: 220px;
     z-index: 1;
+}
+#scoreboard{
+    display: none;
+    background-image: url("gfx/scoreboard.png");
+    width: 207px;
+    height: 157px;
+    position: absolute;
+    top:100px;
+    left:100px;
+}
+#top-score{
+    position: relative;
+    left: 100px;
+    top:50px;
+}
+#current-score{
+    position: relative;
+    top:70px;
+    left: 100px;
 }
