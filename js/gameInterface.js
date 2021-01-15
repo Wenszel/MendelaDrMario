@@ -53,13 +53,16 @@ var gameInterface={
         },1000)
         //sets speed info 
         switch(config.speed){
-            case 250:
+            case "250":
+                console.log("cokolwiek")
                 this.speedinfo.innerText="HIGH";
                 break;
-            case 500:
+            case "500":
+                console.log("cokolwiek2")
                 this.speedinfo.innerText="MID";
                 break;
-            case 1000:
+            case "1000":
+                console.log("cokolwiek3")
                 this.speedinfo.innerText="LOW";
                 break;
         }

@@ -93,7 +93,7 @@ var gameField = {
         document.body.appendChild(this.fieldDiv);
         //generate viruses based on information in config
         for(let i = 0; i<config.virusAmount; i++){
-            let newVirus = new virus();
+            let newVirus = new virus(i);
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
