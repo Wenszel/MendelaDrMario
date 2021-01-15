@@ -103,7 +103,9 @@ var gameField = {
         this.fallingInterval = setInterval(function(){
             let {pillsOnMap, currentPill, virusOnMap, breakBlocks} = gameField;
             //condition that handle situation when pill cant keep falling
-            if (currentPill.isFallible()){
+            if(virusOnMap.length==0){
+                gameField.stageCompleted();
+            }else if (currentPill.isFallible()){
                 currentPill.fallOnce();     
             }else{
                 currentPill.landed();
@@ -112,8 +114,6 @@ var gameField = {
                 gameField.fallElements();
                 if(currentPill.row==0){
                     gameField.gameOver();
-                }else if(virusOnMap.length==0){
-                    gameField.stageCompleted();
                 }else{
                     gameField.currentPill=new pill();
                 }    
@@ -237,10 +237,7 @@ var gameField = {
                     fallingPill.landed();
                     isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
                     if(isBrokenAnyPill)gameField.fallElements();
-                    if(virusOnMap.length==0){
-                        gameField.stageCompleted();
-                    }
-                    clearInterval(interval);
+                    clearInterval(interval);    
                 }        
             },60);  
         });

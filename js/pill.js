@@ -44,7 +44,9 @@ class pill {
     rotate(side){
         if(this.canMove){
         if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||
-            (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]+1].empty)){
+            (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]-1].empty && this.column[0]==config.columns-1)||
+            (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]+1].empty)
+            ){
             gameField.changePillElementsColor(this, true);
             if(this.direction=="horizontal") {
                 this.direction="vertical";
