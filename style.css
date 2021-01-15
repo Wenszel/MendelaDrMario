@@ -109,6 +109,15 @@ body{
     justify-self: left;
     color:#479efa
 }
+#about{
+    display: none;
+    flex-direction: row;
+}
+#about>p,img{
+    margin: 10px;
+    color: #479efa;
+    font-size: 7px;
+}
 #playground{
     margin-top: 100px;
     background-color: black;

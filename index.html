@@ -17,8 +17,8 @@
         <div id="main-page"> 
             <div id="menu" class="menu">
                 <div class="menu-button" onclick="gameField.startGame()">START GAME</div>
-                <div class="menu-button" onclick="settingsInterface.open()">SETTINGS</div>
-                <div class="menu-button">ABOUT AUTHOR</div>
+                <div class="menu-button" onclick="settingsInterface.openSettings()">SETTINGS</div>
+                <div class="menu-button" onclick="settingsInterface.openAbout()">ABOUT DR MARIO</div>
             </div>
         </div>
         <div id="settings">
@@ -41,6 +41,15 @@
             </div>
             <p>PRESS ENTER TO PLAY</p>
         </div>
+        <div id="about" class="menu">
+            <img src="gfx/interface-elements/drmario-poster.jpg" alt="dr mario poster" height="200px">
+                <p>
+                    Dr. Mario is a 1990 action puzzle video game produced by Gunpei Yokoi and designed by Takahiro Harada. Nintendo developed and published the game for the Nintendo Entertainment System and Game Boy consoles. The game's soundtrack was composed by Hirokazu Tanaka.<br><br>
+                    A falling block puzzle game, the player's objective is to destroy the viruses populating the on-screen playing field by using colored vitamin capsules that are tossed into the field by Mario, who assumes the role of a doctor. The player manipulates the capsules as they fall, with the goal being to align similar colors which removes the viruses. The player progresses through the game by eliminating all the viruses on the screen in each level.
+                </p>
+                <h4>PRESS ENTER TO RETURN</h4>
+            </div>
+
         <div id="scoreboard">
             <p id="top-score">00000</p>
             <p id="current-score">00000</p>
