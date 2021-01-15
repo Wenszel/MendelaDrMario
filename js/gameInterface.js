@@ -51,6 +51,18 @@ var gameInterface={
                 this.yellowVirus.style.display="none";
             }
         },1000)
+        //sets speed info 
+        switch(config.speed){
+            case 250:
+                this.speedinfo.innerText="HIGH";
+                break;
+            case 500:
+                this.speedinfo.innerText="MID";
+                break;
+            case 1000:
+                this.speedinfo.innerText="LOW";
+                break;
+        }
         //create game info table
         this.gameinfo.style.display="block";
         this.virusAmount.innerText=gameField.virusOnMap.length;

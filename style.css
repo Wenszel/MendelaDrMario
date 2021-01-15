@@ -90,6 +90,25 @@ body{
 .menu-button:hover{
     color: #479efa;
 }
+#settings{
+    display: none;
+    text-align: center;
+}
+#settings>p{
+    margin-bottom: 20px;
+    padding: 2px;
+    background-color: black;
+}
+.settings-button{
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    
+}
+.settings-button>h2{
+    justify-self: left;
+    color:#479efa
+}
 #playground{
     margin-top: 100px;
     background-color: black;

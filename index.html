@@ -15,11 +15,31 @@
     <body>
         <img src="gfx/interface-elements/logo.png" alt="logo" height="150px" id="logo">
         <div id="main-page"> 
-            <div class="menu">
+            <div id="menu" class="menu">
                 <div class="menu-button" onclick="gameField.startGame()">START GAME</div>
-                <div class="menu-button">SETTINGS</div>
+                <div class="menu-button" onclick="settingsInterface.open()">SETTINGS</div>
                 <div class="menu-button">ABOUT AUTHOR</div>
             </div>
+        </div>
+        <div id="settings">
+            <div class="menu">
+                <div class="settings-button">
+                    <h2>VIRUS LEVEL</h2>
+                    <input type="range" name="viruslevel" min="1" max="10">
+                </div>
+                <div class="settings-button">
+                    <h2>SPEED</h2>
+                    <input type="radio" name="speed" value=1000>LOW
+                    <input type="radio" name="speed" value=500 checked>MED
+                    <input type="radio" name="speed" value=250>HI
+                </div>
+                <div class="settings-button">
+                    <h2>MUSIC</h2>
+                    <input type="radio" name="music" value="false" checked>OFF
+                    <input type="radio" name="music" value="true">ON
+                </div>
+            </div>
+            <p>PRESS ENTER TO PLAY</p>
         </div>
         <div id="scoreboard">
             <p id="top-score">00000</p>
@@ -41,6 +61,7 @@
             <p id="speed" class="game-info-element">LOW</p>
             <p id="virus-amount" class="game-info-element">05</p>
         </div>
+        <script src="js/settingsInterface.js"></script>
         <script src="js/gameInterface.js"></script>
         <script src="js/gameField.js"></script>
     </body>
