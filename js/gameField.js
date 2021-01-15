@@ -2,6 +2,7 @@
 var gameField = {
     fieldDiv: null,
     currentPill: null,
+    waitingPill: null,
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
@@ -72,8 +73,9 @@ var gameField = {
         clearInterval(gameField.fallingInterval);
     },
     initiate(){ // create game field and fill up elements array
+        document.getElementById("playground").style.display="block";
         this.fieldDiv=document.createElement("div")
-        this.fieldDiv.id = "playground";
+        this.fieldDiv.id = "playgroundContent";
         for(let i = 0; i<config.rows; i++){
             let rowArray = [];
             for (let j = 0; j<config.columns; j++){
@@ -89,14 +91,15 @@ var gameField = {
                 rowArray.push(fieldElement);
             }
             this.elements.push(rowArray);
-        }
-        document.body.appendChild(this.fieldDiv);
+        }  
+        document.getElementById("playground").appendChild(this.fieldDiv);
         //generate viruses based on information in config
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus(i);
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
+        this.waitingPill = new pill();
         this.currentPill.generate();
     },
      createFallingInterval(time){
@@ -116,7 +119,8 @@ var gameField = {
                 if(currentPill.row==0){
                     gameField.gameOver();
                 }else{
-                    gameField.currentPill=new pill();
+                    gameField.currentPill= gameField.waitingPill;
+                    gameField.waitingPill=new pill();
                     gameField.currentPill.generate();
                 }    
             }        

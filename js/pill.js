@@ -2,11 +2,7 @@
 class pill {
     constructor(){
         this.row = [0];
-        // this loop deletes case when column is out of range
-        do{
-            var randomColumn = Math.floor(Math.random()*config.columns); 
-        }while(randomColumn==config.columns-1);
-        this.column = [randomColumn, randomColumn+1];
+        this.column = [3,4];
         this.colors = pill.generateColors();
         this.direction = "horizontal";
         this.canMove = true;
@@ -16,8 +12,19 @@ class pill {
         secondPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[1]+"_right.png')";
     } 
     generate(){
+        let pill = document.getElementById("pill");
+        let throwingInterval = setInterval(()=>{
+            let parsetLeftValue = parseInt(pill.style.left)
+            console.log(parsetLeftValue);
+            pill.style.left = parsetLeftValue-30+"px"
+            console.log(pill.style.left);
+            if(parsetLeftValue<=-190){
+                clearInterval(throwingInterval);
+            }
+        },30);
         gameField.changePillElementsColor(this);
         gameField.createFallingInterval(config.speed, this);
+        pill.style.left ="20px"
     }
     fallOnce(){
         gameField.changePillElementsColor(this, true);
