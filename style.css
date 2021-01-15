@@ -12,7 +12,10 @@ body{
     flex-direction: column;
     background-image: url('gfx/gamepatterns/background-pattern.png');
     background-repeat: repeat;
-    background-position: center;
+    background-size: 60px;
+    background-position-x: center;
+    background-position-y: top;
+    zoom: 150%;
     margin: 10px;
 }
 .menu{
@@ -142,7 +145,7 @@ body{
     width: 207px;
     height: 157px;
     position: absolute;
-    top:100px;
+    top:50px;
     left:100px;
 }
 #top-score{
@@ -159,7 +162,7 @@ body{
     display: none;
     background-image: url("gfx/interface-elements/game-info.png");
     position: absolute;
-    right: 100px;
+    right: 120px;
     bottom: 100px;
     height: 205px;
     width: 175px;
@@ -178,6 +181,6 @@ body{
     height: 290px;
     width: 290px;
     position: absolute;
-    top: 100px;
-    right: 400px;
+    top: 50px;
+    right: 100px;
 }
