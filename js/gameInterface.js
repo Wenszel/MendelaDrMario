@@ -2,6 +2,7 @@ var gameInterface={
     //scoreboard properties
     scoreboard: document.getElementById("scoreboard"),
     topScore: document.getElementById("top-score"),
+    currentScore: document.getElementById("current-score"),
     //loupe properties
     loupe: document.getElementById("loupe"),
     blueVirus: document.getElementById("blue-loupe"),
@@ -20,7 +21,14 @@ var gameInterface={
         document.getElementById("logo").style.display="none";
         //makes interface visable
         this.scoreboard.style.display="block";
-        this.loupe.style.display="block";
+        this.loupe.style.display="block";  
+        //set top score on table
+        if(localStorage.getItem("topResult")!=null){
+            this.topScore.textContent = localStorage.getItem("topResult");
+        }
+        while(this.topScore.textContent.length<5){
+            this.topScore.textContent= "0"+this.topScore.textContent;
+        }
         //counts virus graphics changes to animate them
         let counter = 0;
         setInterval(()=>{
@@ -57,6 +65,21 @@ var gameInterface={
             this.levelinfo.innerText=gameField.level;
         }else{
             this.levelinfo.innerText="0"+gameField.level;
+        }
+    },changeTopScore(){
+        if(localStorage.getItem("topResult")<localStorage.getItem("points") || localStorage.getItem("topResult")==null){
+            localStorage.setItem("topResult",localStorage.getItem("points"));
+            this.topScore.textContent = localStorage.getItem("topResult");
+            while(this.topScore.textContent.length<5){
+                this.topScore.textContent= "0"+this.topScore.textContent;
+            }
+        }
+    },changeCurrentScore(){
+        localStorage.setItem("points", gameField.brokenViruses*100);
+        let currentScore = document.getElementById("current-score");
+        currentScore.innerText = localStorage.getItem("points");
+        while(currentScore.innerText.length<5){
+            currentScore.innerText = "0"+currentScore.innerText;
         }
     }
 }

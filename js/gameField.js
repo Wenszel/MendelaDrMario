@@ -7,6 +7,7 @@ var gameField = {
     elements: [], // two-dimensional array, stores grid objects
     fallingInterval: null,
     level: 1,
+    brokenViruses: 0,
     startGame(){
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-1.png')";
@@ -65,6 +66,8 @@ var gameField = {
         gameoverImage.classList.add("gameinfo-image");
         gameInterface.doctor.style.backgroundImage= 'url("gfx/interface-elements/gameover_doctor.png")';
         document.body.appendChild(gameoverImage);
+        gameInterface.changeTopScore();
+        localStorage.setItem("points",0);
         clearInterval(gameField.fallingInterval);
     },
     initiate(){ // create game field and fill up elements array
@@ -171,7 +174,7 @@ var gameField = {
                         elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/game-elements/"+elements[cordinates[0]][cordinates[1]].color+"_x.png')" 
                         gameField.virusOnMap.splice(gameField.virusOnMap.indexOf(virus),1);
                         document.getElementById("virus-amount").innerText=gameField.virusOnMap.length;
-
+                        gameField.brokenViruses++;
                         }
                     else{
                         elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = "url('gfx/game-elements/"+elements[cordinates[0]][cordinates[1]].color+"_o.png')"
@@ -202,12 +205,7 @@ var gameField = {
                 sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
                 sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
 
-                localStorage.setItem("points",(config.virusAmount-virusOnMap.length)*100);
-                let currentScore = document.getElementById("current-score");
-                currentScore.innerText = localStorage.getItem("points");
-                while(currentScore.innerText.length<5){
-                    currentScore.innerText = "0"+currentScore.innerText
-                }
+                gameInterface.changeCurrentScore();
                 return true;
                 }else{
                     return false;
