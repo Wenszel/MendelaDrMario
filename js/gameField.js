@@ -21,7 +21,7 @@ var gameField = {
                 case "ArrowDown": 
                 case "s":
                     gameField.currentPill.canMove = false;
-                    gameField.createFallingInterval(25, gameField.currentPill);
+                    gameField.createFallingInterval(25);
                     break;
                 case "ArrowLeft":
                 case "a":
@@ -99,8 +99,10 @@ var gameField = {
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
-        this.waitingPill = new pill();
-        this.currentPill.generate();
+        this.currentPill.throw();
+        setTimeout(()=>{
+            this.waitingPill = new pill();
+        },1500);  
     },
      createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -119,9 +121,14 @@ var gameField = {
                 if(currentPill.row==0){
                     gameField.gameOver();
                 }else{
-                    gameField.currentPill= gameField.waitingPill;
-                    gameField.waitingPill=new pill();
+                    gameField.currentPill = gameField.waitingPill;
+                    gameField.currentPill.throw();
+                    setTimeout(()=>{
+                        gameField.waitingPill = new pill();
+                     },1500)
+                /*    gameField.currentPill.throw();
                     gameField.currentPill.generate();
+                    */
                 }    
             }        
         },time);

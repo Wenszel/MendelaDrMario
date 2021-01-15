@@ -8,23 +8,31 @@ class pill {
         this.canMove = true;
         let firstPreviewPillPart = document.getElementById("first-part");
         let secondPreviewPillPart = document.getElementById("second-part");
+        
         firstPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[0]+"_left.png')";
         secondPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[1]+"_right.png')";
+    
     } 
     generate(){
+            gameField.changePillElementsColor(this);
+            gameField.createFallingInterval(config.speed, this);
+    } 
+    throw(){
         let pill = document.getElementById("pill");
+        let path =[[-25,25],[-25,25],[-25,25],[-25,25],[-25,0],[-25,0],[-25,0],[-25,0],[-25,0],[-25,0],[0,-25],[0,-25],[0,-25],[0,-25]];
+        let counter = 0;
         let throwingInterval = setInterval(()=>{
-            let parsetLeftValue = parseInt(pill.style.left)
-            console.log(parsetLeftValue);
-            pill.style.left = parsetLeftValue-30+"px"
-            console.log(pill.style.left);
-            if(parsetLeftValue<=-190){
+            let parseTopValue = parseInt(pill.style.top);
+            let parseLeftValue = parseInt(pill.style.left);
+            pill.style.left = parseLeftValue+path[counter][0]+"px";
+            pill.style.top = parseTopValue-path[counter][1]+"px";
+            counter++;
+            if(counter==path.length){
+                    gameField.currentPill.generate();
+                    pill.style.left ="26px";
                 clearInterval(throwingInterval);
             }
-        },30);
-        gameField.changePillElementsColor(this);
-        gameField.createFallingInterval(config.speed, this);
-        pill.style.left ="20px"
+        },100);
     }
     fallOnce(){
         gameField.changePillElementsColor(this, true);
