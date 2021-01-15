@@ -2,6 +2,7 @@
 var gameField = {
     fieldDiv: null,
     currentPill: null,
+    waitingPill: null,
     pillsOnMap: [],
     virusOnMap: [],
     elements: [], // two-dimensional array, stores grid objects
@@ -97,6 +98,7 @@ var gameField = {
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
+        this.waitingPill = new pill();
         this.currentPill.generate();
     },
      createFallingInterval(time){
@@ -116,7 +118,8 @@ var gameField = {
                 if(currentPill.row==0){
                     gameField.gameOver();
                 }else{
-                    gameField.currentPill=new pill();
+                    gameField.currentPill= gameField.waitingPill;
+                    gameField.waitingPill=new pill();
                     gameField.currentPill.generate();
                 }    
             }        
