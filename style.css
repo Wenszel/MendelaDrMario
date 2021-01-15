@@ -162,7 +162,7 @@ body{
     display: none;
     background-image: url("gfx/interface-elements/game-info.png");
     position: absolute;
-    right: 120px;
+    right: 200px;
     bottom: 100px;
     height: 205px;
     width: 175px;
@@ -175,12 +175,28 @@ body{
 }
 #doctor{
     display: none;
-    background-image: url("gfx/interface-elements/doctor.png");
+    background-image: url("gfx/interface-elements/doctor_hand_up.png");
     background-repeat: no-repeat;
     background-size: cover;
-    height: 290px;
-    width: 290px;
+    height: 210px;
+    width: 210px;
     position: absolute;
-    top: 50px;
-    right: 100px;
+    top: 100px;
+    right: 200px;
+}
+#pill{
+    width: 60px;
+    height: 30px;
+    position: relative;
+    z-index: 1;
+    left: 20px;
+    top:10px;
+
+}
+.pill-part{
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    float: left;
+    background-size: cover;
 }

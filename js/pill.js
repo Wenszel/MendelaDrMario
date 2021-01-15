@@ -10,9 +10,15 @@ class pill {
         this.colors = pill.generateColors();
         this.direction = "horizontal";
         this.canMove = true;
+        let firstPreviewPillPart = document.getElementById("first-part");
+        let secondPreviewPillPart = document.getElementById("second-part");
+        firstPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[0]+"_left.png')";
+        secondPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[1]+"_right.png')";
+    } 
+    generate(){
         gameField.changePillElementsColor(this);
         gameField.createFallingInterval(config.speed, this);
-    } 
+    }
     fallOnce(){
         gameField.changePillElementsColor(this, true);
         this.row[0]++;
@@ -43,10 +49,17 @@ class pill {
     }
     rotate(side){
         if(this.canMove){
-        if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||
-            (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]-1].empty && this.column[0]==config.columns-1)||
-            (this.direction=="vertical" && gameField.elements[this.row[0]][this.column[0]+1].empty)
-            ){
+        if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||this.direction=="vertical"){
+            if(this.direction=="vertical" && this.column[0]==config.columns-1){
+                if(!gameField.elements[this.row[0]][this.column[0]-1].empty){
+                    return false;
+                }
+            }
+            else if(this.direction=="vertical" && this.column[0]==0){
+                if(!gameField.elements[this.row[0]][this.column[0]+1].empty){
+                    return false;
+                }
+            }
             gameField.changePillElementsColor(this, true);
             if(this.direction=="horizontal") {
                 this.direction="vertical";

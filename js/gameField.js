@@ -97,6 +97,7 @@ var gameField = {
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
+        this.currentPill.generate();
     },
      createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -116,6 +117,7 @@ var gameField = {
                     gameField.gameOver();
                 }else{
                     gameField.currentPill=new pill();
+                    gameField.currentPill.generate();
                 }    
             }        
         },time);
