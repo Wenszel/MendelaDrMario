@@ -66,7 +66,15 @@ var gameInterface={
         }else{
             this.levelinfo.innerText="0"+gameField.level;
         }
-    },changeTopScore(){
+    },changeVirusAmount(){
+        this.virusAmount.innerText=config.virusAmount
+        if(parseInt(this.virusAmount.innerText)>9){
+            this.virusAmount.innerText=config.virusAmount;
+        }else{
+            this.virusAmount.innerText="0"+config.virusAmount;
+        }
+    }
+    ,changeTopScore(){
         if(localStorage.getItem("topResult")<localStorage.getItem("points") || localStorage.getItem("topResult")==null){
             localStorage.setItem("topResult",localStorage.getItem("points"));
             this.topScore.textContent = localStorage.getItem("topResult");

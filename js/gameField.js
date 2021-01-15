@@ -51,6 +51,7 @@ var gameField = {
             gameInterface.changeLevel();
             document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-"+gameField.level+".png')";
             config.virusAmount++;
+            gameInterface.changeVirusAmount();
             gameField.currentPill= null;
             gameField.pillsOnMap= [];
             gameField.virusOnMap= [];
@@ -236,6 +237,9 @@ var gameField = {
                     fallingPill.landed();
                     isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
                     if(isBrokenAnyPill)gameField.fallElements();
+                    if(virusOnMap.length==0){
+                        gameField.stageCompleted();
+                    }
                     clearInterval(interval);
                 }        
             },60);  
