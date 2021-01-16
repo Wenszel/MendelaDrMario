@@ -54,6 +54,7 @@ var gameField = {
         stageComplitedImage.classList.add("gameinfo-image");
         document.body.appendChild(stageComplitedImage);
         clearInterval(gameField.fallingInterval);
+        document.getElementById("pill").remove();
         setTimeout(()=>{
             document.body.removeChild(stageComplitedImage);
             gameInterface.changeLevel();
@@ -65,7 +66,7 @@ var gameField = {
             gameField.virusOnMap= [];
             gameField.elements= [];
             gameField.fallingInterval= null;
-            document.body.removeChild(gameField.fieldDiv);
+            document.getElementById("playground").removeChild(gameField.fieldDiv);
             gameField.initiate();
         },1000);
     },
@@ -146,9 +147,10 @@ var gameField = {
                 breakBlocks(currentPill);
                 gameField.fallElements();
                 if(currentPill.row==1){
-                    gameField.gameOver();
                     document.getElementById("pill").remove();
+                    gameField.gameOver();
                 }else{
+                    clearInterval(gameField.fallingInterval)
                     gameField.currentPill = gameField.waitingPill;
                     gameField.currentPill.throw();
                     gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
@@ -156,7 +158,7 @@ var gameField = {
                         gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
                         gameField.waitingPill = new pill();
                      },time);
-                     clearInterval(gameField.fallingInterval)
+                     
                 }    
             }        
         },time);
