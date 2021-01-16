@@ -14,32 +14,39 @@ var gameField = {
         document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-1.png')";
         this.initiate();
         gameInterface.initiate();
+        let fired = false;
         //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
-            const key = event.key;
-            switch(key){
-                case "ArrowDown": 
-                case "s":
-                    gameField.currentPill.canMove = false;
-                    gameField.createFallingInterval(25);
-                    break;
-                case "ArrowLeft":
-                case "a":
-                    gameField.currentPill.moveHorizontal("left");
-                    break;
-                case "ArrowRight":
-                case "d":
-                    gameField.currentPill.moveHorizontal("right");
-                    break;
-                case "ArrowUp":
-                case "w":
-                    gameField.currentPill.rotate("left");
-                    break;
-                case "Shift":
-                    gameField.currentPill.rotate("right");
-                    break;
-            }  
+            if(!fired){
+                fired = true;
+                const key = event.key;
+                switch(key){
+                    case "ArrowDown": 
+                    case "s":
+                            gameField.currentPill.canMove = false;
+                            gameField.createFallingInterval(25);
+                        break;
+                    case "ArrowLeft":
+                    case "a":
+                        gameField.currentPill.moveHorizontal("left");
+                        break;
+                    case "ArrowRight":
+                    case "d":
+                        gameField.currentPill.moveHorizontal("right");
+                        break;
+                    case "ArrowUp":
+                    case "w":
+                        gameField.currentPill.rotate("left");
+                        break;
+                    case "Shift":
+                        gameField.currentPill.rotate("right");
+                        break;
+                } 
+            } 
         };
+        document.onkeyup = function(){
+            fired = false;
+        }
     },
     stageCompleted(){
         let stageComplitedImage = new Image();
