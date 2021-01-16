@@ -1,7 +1,7 @@
 "strict mode";
 class pill {
     constructor(){
-        this.row = [0];
+        this.row = [1];
         this.column = [3,4];
         this.colors = pill.generateColors();
         this.direction = "horizontal";

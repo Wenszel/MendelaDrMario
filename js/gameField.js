@@ -76,7 +76,25 @@ var gameField = {
         document.getElementById("playground").style.display="block";
         this.fieldDiv=document.createElement("div")
         this.fieldDiv.id = "playgroundContent";
-        for(let i = 0; i<config.rows; i++){
+        let rowArray = [];
+        //bottle neck
+        for(let i=0; i<config.columns; i++){
+            let fieldElement = {
+                row: 0,
+                column: i,
+                empty: true,
+                color: null,
+                elementDiv: document.createElement("div")
+            }
+            if(i<3||i>4){
+                fieldElement.empty=false;
+            }
+            fieldElement.elementDiv.classList.add("playground-element");
+            this.fieldDiv.append(fieldElement.elementDiv);
+            rowArray.push(fieldElement);
+        }
+        this.elements.push(rowArray);
+        for(let i = 1; i<=config.rows; i++){
             let rowArray = [];
             for (let j = 0; j<config.columns; j++){
                 let fieldElement = {
@@ -120,7 +138,7 @@ var gameField = {
                 pillsOnMap.push(currentPill);
                 breakBlocks(currentPill);
                 gameField.fallElements();
-                if(currentPill.row==0){
+                if(currentPill.row==1){
                     gameField.gameOver();
                     document.getElementById("pill").remove();
                 }else{
@@ -170,7 +188,7 @@ var gameField = {
                 if(elements[row][column].color != elements[row+i][column].color) break;
                 sameColorElementsVertical.push([row+i,column]);
             }
-            for(let i = -1; row+i>=0; i--){
+            for(let i = -1; row+i>=1; i--){
                 if(elements[row][column].color != elements[row+i][column].color) break;
                 sameColorElementsVertical.push([row+i,column]);
             }
