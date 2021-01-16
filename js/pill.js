@@ -5,21 +5,31 @@ class pill {
         this.column = [3,4];
         this.colors = pill.generateColors();
         this.direction = "horizontal";
-        this.canMove = true;
-        let firstPreviewPillPart = document.getElementById("first-part");
-        let secondPreviewPillPart = document.getElementById("second-part");
-        
+        this.canMove = false;
+        let pillElement = document.createElement("pill");
+        pillElement.id="pill"
+        pillElement.style.left="22px";
+        pillElement.style.top="22px";
+        let firstPreviewPillPart = document.createElement("div");
+        firstPreviewPillPart.id="first-part";
+        let secondPreviewPillPart = document.createElement("div");
+        secondPreviewPillPart.id="second-part";
+        firstPreviewPillPart.classList.add("pill-part");
+        secondPreviewPillPart.classList.add("pill-part");
         firstPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[0]+"_left.png')";
         secondPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[1]+"_right.png')";
-    
+        pillElement.appendChild(firstPreviewPillPart);
+        pillElement.appendChild(secondPreviewPillPart);
+        document.getElementById("doctor").appendChild(pillElement);
     } 
     generate(){
+            this.canMove = true;
             gameField.changePillElementsColor(this);
             gameField.createFallingInterval(config.speed, this);
     } 
     throw(){
         let pill = document.getElementById("pill");
-        let path =[[-25,25],[-25,25],[-25,25],[-25,25],[-25,0],[-25,0],[-25,0],[-25,0],[-25,0],[-25,0],[0,-25],[0,-25],[0,-25],[0,-25]];
+        let path =[[0,22],[-22,22],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[0,-22],[0,-22],[0,-22],[0,-22]];
         let counter = 0;
         let throwingInterval = setInterval(()=>{
             let parseTopValue = parseInt(pill.style.top);
@@ -28,11 +38,13 @@ class pill {
             pill.style.top = parseTopValue-path[counter][1]+"px";
             counter++;
             if(counter==path.length){
+                setTimeout(()=>{
                     gameField.currentPill.generate();
-                    pill.style.left ="26px";
+                    document.getElementById("doctor").removeChild(document.getElementById("pill"));
+                },120)
                 clearInterval(throwingInterval);
             }
-        },100);
+        },30);
     }
     fallOnce(){
         gameField.changePillElementsColor(this, true);

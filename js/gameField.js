@@ -100,9 +100,11 @@ var gameField = {
         }
         this.currentPill = new pill();
         this.currentPill.throw();
+        gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
         setTimeout(()=>{
+            gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
             this.waitingPill = new pill();
-        },1500);  
+        },750);  
     },
      createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -120,15 +122,16 @@ var gameField = {
                 gameField.fallElements();
                 if(currentPill.row==0){
                     gameField.gameOver();
+                    document.getElementById("pill").remove();
                 }else{
                     gameField.currentPill = gameField.waitingPill;
                     gameField.currentPill.throw();
+                    gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
                     setTimeout(()=>{
+                        gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
                         gameField.waitingPill = new pill();
-                     },1500)
-                /*    gameField.currentPill.throw();
-                    gameField.currentPill.generate();
-                    */
+                     },time);
+                     clearInterval(gameField.fallingInterval)
                 }    
             }        
         },time);

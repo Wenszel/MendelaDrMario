@@ -12,7 +12,7 @@ body{
     flex-direction: column;
     background-image: url('gfx/gamepatterns/background-pattern.png');
     background-repeat: repeat;
-    background-size: 60px;
+    background-size: 44px;
     background-position-x: center;
     background-position-y: top;
     zoom: 120%;
@@ -120,28 +120,27 @@ body{
 }
 #playground{
     display: none;
-    margin-top: 50px;
+    margin-top: 150px;
     background-image: url('gfx/interface-elements/bottle.png');
     background-repeat: no-repeat;
     background-size: cover;
-    height: 550px;
-    width: 300px;
+    height: 455px;
+    width: 256px;
 }
 #playgroundContent{
     position: relative;
-    top: -110px;
-    left:50px;
-    height: 400px;
-    width: 200px;
+    top: -125px;
+    left:40px;
+    height: 344px;
+    width: 176px;
     display: grid;
     grid-template-columns: auto auto auto auto auto auto auto auto;
 }
 .playground-element{
-    border: 1px solid white;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 25px;
-    width: 25px;  
+    height: 22px;
+    width: 22px;  
 }
 .gameinfo-image{
     width: 334px;
@@ -220,19 +219,20 @@ body{
     height: 210px;
     width: 210px;
     position: relative;
-    top: 50px;
+    top: 0px;
     left: 350px;
 }
 #pill{
-    width: 60px;
-    height: 30px;
+    width: 44px;
+    height: 22px;
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: row;
 }
 .pill-part{
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     background-repeat: no-repeat;
-    float: left;
     background-size: cover;
 }
