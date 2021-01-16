@@ -1,3 +1,4 @@
+"strict mode";
 var gameInterface={
     //scoreboard properties
     scoreboard: document.getElementById("scoreboard"),
@@ -90,19 +91,23 @@ var gameInterface={
         }
     }
     ,changeTopScore(){
+        //if there were more points in last game then ever changes local storage top results
         if(localStorage.getItem("topResult")<localStorage.getItem("points") || localStorage.getItem("topResult")==null){
             localStorage.setItem("topResult",localStorage.getItem("points"));
+            //changes top score on interface
             this.topScore.textContent = localStorage.getItem("topResult");
+            //fills score with zeros at the beginning
             while(this.topScore.textContent.length<5){
                 this.topScore.textContent= "0"+this.topScore.textContent;
             }
         }
     },changeCurrentScore(){
+        //changes points based on broken viruses
         localStorage.setItem("points", gameField.brokenViruses*100);
-        let currentScore = document.getElementById("current-score");
-        currentScore.innerText = localStorage.getItem("points");
-        while(currentScore.innerText.length<5){
-            currentScore.innerText = "0"+currentScore.innerText;
+        this.currentScore.innerText = localStorage.getItem("points");
+        //fills score with zeros at the beginning
+        while(this.currentScore.innerText.length<5){
+            this.currentScore.innerText = "0"+this.currentScore.innerText;
         }
     }
 }

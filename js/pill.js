@@ -2,22 +2,27 @@
 class pill {
     constructor(){
         this.row = [1];
-        this.column = [3,4];
+        this.column = [3,4]; //bottle neck cords
         this.colors = pill.generateColors();
         this.direction = "horizontal";
         this.canMove = false;
+
+        //Preview pill generate
         let pillElement = document.createElement("pill");
         pillElement.id="pill"
         pillElement.style.left="22px";
         pillElement.style.top="22px";
+
         let firstPreviewPillPart = document.createElement("div");
         firstPreviewPillPart.id="first-part";
+        firstPreviewPillPart.classList.add("pill-part");
+        firstPreviewPillPart.style.backgroundImage=`url('gfx/game-elements/${this.colors[0]}_left.png')`;
+
         let secondPreviewPillPart = document.createElement("div");
         secondPreviewPillPart.id="second-part";
-        firstPreviewPillPart.classList.add("pill-part");
         secondPreviewPillPart.classList.add("pill-part");
-        firstPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[0]+"_left.png')";
-        secondPreviewPillPart.style.backgroundImage="url('gfx/game-elements/"+this.colors[1]+"_right.png')";
+        secondPreviewPillPart.style.backgroundImage=`url('gfx/game-elements/${this.colors[1]}_right.png')`;
+
         pillElement.appendChild(firstPreviewPillPart);
         pillElement.appendChild(secondPreviewPillPart);
         document.getElementById("doctor").appendChild(pillElement);
@@ -69,44 +74,43 @@ class pill {
                 }else if (this.direction=="vertical" && elements[currentPill.row[0]][this.column[0]+1].empty && gameField.elements[gameField.currentPill.row[1]][this.column[0]+1].empty){
                     this.column = [this.column[0]+1];
                 }
-
             }
             changePillElementsColor(this, false);
         }
     }
     rotate(side){
         if(this.canMove){
-        if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||this.direction=="vertical"){
-            if(this.direction=="vertical" && this.column[0]==config.columns-1){
-                if(!gameField.elements[this.row[0]][this.column[0]-1].empty){
-                    return false;
+            if((this.direction=="horizontal" && gameField.elements[this.row[0]-1][this.column[0]].empty)||this.direction=="vertical"){
+                if(this.direction=="vertical" && this.column[0]==config.columns-1){
+                    if(!gameField.elements[this.row[0]][this.column[0]-1].empty){
+                        return false;
+                    }
                 }
-            }
-            else if(this.direction=="vertical" && this.column[0]==0){
-                if(!gameField.elements[this.row[0]][this.column[0]+1].empty){
-                    return false;
+                else if(this.direction=="vertical" && this.column[0]==0){
+                    if(!gameField.elements[this.row[0]][this.column[0]+1].empty){
+                        return false;
+                    }
                 }
-            }
-            gameField.changePillElementsColor(this, true);
-            if(this.direction=="horizontal") {
-                this.direction="vertical";
-                this.column = [this.column[0]];
-                this.row = [this.row[0],this.row[0]-1];
-                if(side=="right") this.colors = this.colors.reverse();
-            }
-            else{
-                if(this.column[0]==config.columns-1){
-                    this.column = [this.column[0]-1,this.column[0]];
-                }else{
-                    this.column = [this.column[0],this.column[0]+1];
+                gameField.changePillElementsColor(this, true);
+                if(this.direction=="horizontal") {
+                    this.direction="vertical";
+                    this.column = [this.column[0]];
+                    this.row = [this.row[0],this.row[0]-1];
+                    if(side=="right") this.colors = this.colors.reverse();
                 }
-                this.direction="horizontal";
-                this.row = [this.row[0]];
-                if(side=="left") this.colors = this.colors.reverse();   
+                else{
+                    if(this.column[0]==config.columns-1){ //situation when pill is horizontal on right side of map
+                        this.column = [this.column[0]-1,this.column[0]];
+                    }else{
+                        this.column = [this.column[0],this.column[0]+1];
+                    }
+                    this.direction="horizontal";
+                    this.row = [this.row[0]];
+                    if(side=="left") this.colors = this.colors.reverse();   
+                }
+                gameField.changePillElementsColor(this, false);
             }
-            gameField.changePillElementsColor(this, false);
         }
-    }
     }
     isFallible(){
         //check if fields below pill are empty and in rows scope
@@ -132,7 +136,7 @@ class pill {
                     return false;
                 }  
             } 
-        }catch (error){
+        }catch (error){ //Type error is coused by trying to access gamefield element that is out of range
             if (error instanceof TypeError){
                 return false;
             }   
