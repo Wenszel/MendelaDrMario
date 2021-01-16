@@ -14,32 +14,39 @@ var gameField = {
         document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-1.png')";
         this.initiate();
         gameInterface.initiate();
+        let fired = false;
         //checks which keys were pressed and changes the position of the pill
         document.onkeydown = function(event){
-            const key = event.key;
-            switch(key){
-                case "ArrowDown": 
-                case "s":
-                    gameField.currentPill.canMove = false;
-                    gameField.createFallingInterval(25, gameField.currentPill);
-                    break;
-                case "ArrowLeft":
-                case "a":
-                    gameField.currentPill.moveHorizontal("left");
-                    break;
-                case "ArrowRight":
-                case "d":
-                    gameField.currentPill.moveHorizontal("right");
-                    break;
-                case "ArrowUp":
-                case "w":
-                    gameField.currentPill.rotate("left");
-                    break;
-                case "Shift":
-                    gameField.currentPill.rotate("right");
-                    break;
-            }  
+            if(!fired){
+                fired = true;
+                const key = event.key;
+                switch(key){
+                    case "ArrowDown": 
+                    case "s":
+                            gameField.currentPill.canMove = false;
+                            gameField.createFallingInterval(25);
+                        break;
+                    case "ArrowLeft":
+                    case "a":
+                        gameField.currentPill.moveHorizontal("left");
+                        break;
+                    case "ArrowRight":
+                    case "d":
+                        gameField.currentPill.moveHorizontal("right");
+                        break;
+                    case "ArrowUp":
+                    case "w":
+                        gameField.currentPill.rotate("left");
+                        break;
+                    case "Shift":
+                        gameField.currentPill.rotate("right");
+                        break;
+                } 
+            } 
         };
+        document.onkeyup = function(){
+            fired = false;
+        }
     },
     stageCompleted(){
         let stageComplitedImage = new Image();
@@ -73,9 +80,28 @@ var gameField = {
         clearInterval(gameField.fallingInterval);
     },
     initiate(){ // create game field and fill up elements array
+        document.getElementById("playground").style.display="block";
         this.fieldDiv=document.createElement("div")
-        this.fieldDiv.id = "playground";
-        for(let i = 0; i<config.rows; i++){
+        this.fieldDiv.id = "playgroundContent";
+        let rowArray = [];
+        //bottle neck
+        for(let i=0; i<config.columns; i++){
+            let fieldElement = {
+                row: 0,
+                column: i,
+                empty: true,
+                color: null,
+                elementDiv: document.createElement("div")
+            }
+            if(i<3||i>4){
+                fieldElement.empty=false;
+            }
+            fieldElement.elementDiv.classList.add("playground-element");
+            this.fieldDiv.append(fieldElement.elementDiv);
+            rowArray.push(fieldElement);
+        }
+        this.elements.push(rowArray);
+        for(let i = 1; i<=config.rows; i++){
             let rowArray = [];
             for (let j = 0; j<config.columns; j++){
                 let fieldElement = {
@@ -90,16 +116,20 @@ var gameField = {
                 rowArray.push(fieldElement);
             }
             this.elements.push(rowArray);
-        }
-        document.body.appendChild(this.fieldDiv);
+        }  
+        document.getElementById("playground").appendChild(this.fieldDiv);
         //generate viruses based on information in config
         for(let i = 0; i<config.virusAmount; i++){
             let newVirus = new virus(i);
             this.virusOnMap.push(newVirus);
         }
         this.currentPill = new pill();
-        this.waitingPill = new pill();
-        this.currentPill.generate();
+        this.currentPill.throw();
+        gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
+        setTimeout(()=>{
+            gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
+            this.waitingPill = new pill();
+        },750);  
     },
      createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -115,12 +145,18 @@ var gameField = {
                 pillsOnMap.push(currentPill);
                 breakBlocks(currentPill);
                 gameField.fallElements();
-                if(currentPill.row==0){
+                if(currentPill.row==1){
                     gameField.gameOver();
+                    document.getElementById("pill").remove();
                 }else{
-                    gameField.currentPill= gameField.waitingPill;
-                    gameField.waitingPill=new pill();
-                    gameField.currentPill.generate();
+                    gameField.currentPill = gameField.waitingPill;
+                    gameField.currentPill.throw();
+                    gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
+                    setTimeout(()=>{
+                        gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
+                        gameField.waitingPill = new pill();
+                     },time);
+                     clearInterval(gameField.fallingInterval)
                 }    
             }        
         },time);
@@ -155,11 +191,11 @@ var gameField = {
             let sameColorElementsHorizontal = [];
             let sameColorElementsVertical = [];
             let {elements, virusOnMap} = gameField;
-            for(let i = 0; i+row<config.rows; i++){
+            for(let i = 0; i+row<config.rows+1; i++){
                 if(elements[row][column].color != elements[row+i][column].color) break;
                 sameColorElementsVertical.push([row+i,column]);
             }
-            for(let i = -1; row+i>=0; i--){
+            for(let i = -1; row+i>=1; i--){
                 if(elements[row][column].color != elements[row+i][column].color) break;
                 sameColorElementsVertical.push([row+i,column]);
             }
