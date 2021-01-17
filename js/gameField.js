@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 var gameField = {
     fieldDiv: null,
     currentPill: null,
@@ -288,7 +288,7 @@ var gameField = {
                     fallingPill.fallOnce();     
                 }else{
                     fallingPill.landed();
-                    isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
+                    let isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
                     if(isBrokenAnyPill) gameField.fallElements(); //while there is any broken pill on map triggers falling function
                     clearInterval(interval);    
                 }        

@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 class pill {
     constructor(){
         this.row = [1];

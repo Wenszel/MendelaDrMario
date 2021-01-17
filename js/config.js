@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 var config = {
     rows: 16,
     columns: 8,

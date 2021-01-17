@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 var settingsInterface = {
     openSettings(){
         document.getElementById("menu").style.display="none";

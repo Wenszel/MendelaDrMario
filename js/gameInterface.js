@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 var gameInterface={
     //scoreboard properties
     scoreboard: document.getElementById("scoreboard"),

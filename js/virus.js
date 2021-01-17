@@ -1,4 +1,4 @@
-"strict mode";
+"use strict";
 class virus {
     //id makes viruses have different colors
     constructor(id){
