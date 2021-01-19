@@ -23,8 +23,10 @@ var gameField = {
                 switch(key){
                     case "ArrowDown": 
                     case "s":
+                        if(gameField.currentPill.canMove){
                             gameField.currentPill.canMove = false; //if false other moves are blocked
                             gameField.createFallingInterval(25); //fast falling
+                        }
                         break;
                     case "ArrowLeft":
                     case "a":
