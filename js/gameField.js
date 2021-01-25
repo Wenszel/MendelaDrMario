@@ -268,11 +268,11 @@ var gameField = {
                 }
             }
         if(pill.row.length>pill.column.length){ //if pill horizontally
-            pill.row.forEach(item => breakBlocksMethod(item, pill.column[0]));
+            return pill.row.forEach(item => breakBlocksMethod(item, pill.column[0]));
         }else if(pill.row.length<pill.column.length){ //if pill vertically
-            pill.column.forEach(item => breakBlocksMethod(pill.row[0], item)); 
+            return pill.column.forEach(item => breakBlocksMethod(pill.row[0], item)); 
         }else if(pill.row.length==pill.column.length){//if pill is dot
-            breakBlocksMethod(pill.row[0], pill.column[0]); 
+            return breakBlocksMethod(pill.row[0], pill.column[0]); 
         }
     },
     findPillByCordinates(rows,columns){
