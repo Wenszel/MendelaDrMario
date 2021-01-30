@@ -141,16 +141,18 @@ var gameField = {
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
-            let {pillsOnMap, currentPill, virusOnMap} = gameField;
-            if(virusOnMap.length==0){ //when there is no more viruses on map
+            let {pillsOnMap, currentPill} = gameField;
+            if(gameField.virusOnMap.length==0){ //when there is no more viruses on map
                 gameField.stageCompleted();
             }else if (currentPill.isFallible()){ //when pill can fall
                 currentPill.fallOnce();     
             }else{ //when pill cant keeps falling
                 currentPill.landed(); 
                 pillsOnMap.push(currentPill);
-                gameField.breakBlocks(currentPill);
-                gameField.fallElements();
+                //TODO: zifowac to jak skoncze debugowanie break
+                if(gameField.breakBlocks(currentPill)){
+                    gameField.fallElements();
+                }
                 if(currentPill.row==1){ //pill on top of the bottle
                     gameField.gameOver();
                 }else{
@@ -194,86 +196,106 @@ var gameField = {
     },
     //this function finds same color elements in the neighbourhood of fallen pill
     breakBlocks(pill){
-        let breakBlocksMethod = function(row, column){
-            let {elements, virusOnMap, brokenViruses} = gameField;
-            let sameColorElementsHorizontal = [];
-            let sameColorElementsVertical = [];
+        let { elements, virusOnMap, brokenViruses } = gameField; 
+        let cordinates = [];
+        let markBlocks = (row, column)=>{
+
+            let sameColorHorizontal = [];
+            let sameColorVertical = [];
+
             for(let i = 0; i+row<config.rows+1; i++){
                 if(elements[row][column].color != elements[row+i][column].color) break;
-                sameColorElementsVertical.push([row+i,column]);
+                sameColorVertical.push([row+i,column]);
             }
             for(let i = -1; row+i>=1; i--){
                 if(elements[row][column].color != elements[row+i][column].color) break;
-                sameColorElementsVertical.push([row+i,column]);
+                sameColorVertical.push([row+i,column]);
             }
+
             for(let i = 0; column+i>=0; i--){
                 if(elements[row][column].color != elements[row][column+i].color) break;
-                sameColorElementsHorizontal.push([row,column+i]);
+                sameColorHorizontal.push([row,column+i]);
             }
             for(let i = 1; i+column<config.columns; i++){
                 if(elements[row][column].color != elements[row][column+i].color) break;
-                sameColorElementsHorizontal.push([row,column+i]);
+                sameColorHorizontal.push([row,column+i]);
             }
-            //if there is four the same color in row break elements
-            if(sameColorElementsHorizontal.length>=4 || sameColorElementsVertical.length>=4){
-                let breakElement = function(cordinates){  
-                    //checkes is virus on cords
-                    let virus = virusOnMap.find(i=>{
-                        if(i.row==cordinates[0] && i.column==cordinates[1]) return true;
-                    });
-                    //if yes changes element background to broken virus and delete virus from array 
-                    if(virus!=undefined){
-                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = `url('gfx/game-elements/${elements[cordinates[0]][cordinates[1]].color}_x.png')` 
-                        virusOnMap.splice(virusOnMap.indexOf(virus),1);
-                        //updates interface
-                        document.getElementById("virus-amount").innerText=virusOnMap.length;
-                        brokenViruses++;
-                        }
-                    //else changes element background to broken pill
-                    else{
-                        elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = `url('gfx/game-elements/${elements[cordinates[0]][cordinates[1]].color}_o.png')`
-                    }
-                    elements[cordinates[0]][cordinates[1]].color = null;
-                    elements[cordinates[0]][cordinates[1]].empty = true;   
-                    //after few seconds element's background empty
-                    setTimeout(function(){elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = null},50);
-                    //finds which pill is breaking
-                    let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinates[0])&&i.column.includes(cordinates[1])));
-                    if(breakingPill!=undefined){
-                        //updates pill properties with new cords, colors and direction 
-                        if(breakingPill.direction=="vertical"){
-                            let index = breakingPill.row.indexOf(cordinates[0])
-                            breakingPill.row.splice(index, 1);
-                            breakingPill.colors.splice(index, 1);
-                        }else{
-                            let index = breakingPill.column.indexOf(cordinates[1])
-                            breakingPill.column.splice(index, 1);   
-                            breakingPill.colors.splice(index, 1);
-                        }
-                        breakingPill.direction="dot";
-                        if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){//if pill isnt complitly deleted generate it on map
-                            gameField.changePillElementsColor(breakingPill, false);
-                        }else{
-                            gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1); //else delete it from array
-                        }
-                    }
-                }    
-                sameColorElementsHorizontal.splice(0,1); //same horizontal and vertical has first cord the same so it deletes first value from array
-                sameColorElementsHorizontal.forEach((cordinates) => {breakElement(cordinates)});
-                sameColorElementsVertical.forEach((cordinates) => {breakElement(cordinates)});
-                gameInterface.changeCurrentScore();
-                return true;
-                }else{
-                    return false;
+            if(sameColorVertical.length>=4 && sameColorHorizontal.length>=4){
+                return sameColorVertical.concat(sameColorHorizontal);
+            }else if (sameColorVertical.length>=4){
+                return sameColorVertical;
+            }else if (sameColorHorizontal.length>=4){
+                return sameColorHorizontal;
+            }else{
+                return false;
+            }
+        }
+        let breakBlock = function(cordinate){
+            //checkes is virus on cords
+            let virus = gameField.virusOnMap.find(i=>{
+                if(i.row==cordinate[0] && i.column==cordinate[1]) return true;
+            });
+            //if yes changes element background to broken virus and delete virus from array 
+            if(virus!=undefined){
+                elements[cordinate[0]][cordinate[1]].elementDiv.style.backgroundImage = `url('gfx/game-elements/${elements[cordinate[0]][cordinate[1]].color}_x.png')` 
+                virusOnMap.splice(virusOnMap.indexOf(virus),1);
+                //updates interface
+                document.getElementById("virus-amount").innerText=virusOnMap.length;
+                brokenViruses++;
+                }
+            //else changes element background to broken pill
+            else{
+                
+                if(elements[cordinate[0]][cordinate[1]].color!=undefined){
+                elements[cordinate[0]][cordinate[1]].elementDiv.style.backgroundImage = `url('gfx/game-elements/${elements[cordinate[0]][cordinate[1]].color}_o.png')`
                 }
             }
-        if(pill.row.length>pill.column.length){ //if pill horizontally
-            return pill.row.forEach(item => breakBlocksMethod(item, pill.column[0]));
-        }else if(pill.row.length<pill.column.length){ //if pill vertically
-            return pill.column.forEach(item => breakBlocksMethod(pill.row[0], item)); 
-        }else if(pill.row.length==pill.column.length){//if pill is dot
-            return breakBlocksMethod(pill.row[0], pill.column[0]); 
+            elements[cordinate[0]][cordinate[1]].color = null;
+            elements[cordinate[0]][cordinate[1]].empty = true;   
+            //after few seconds element's background empty
+            setTimeout(function(){elements[cordinate[0]][cordinate[1]].elementDiv.style.backgroundImage = null},50);
+            //finds which pill is breaking
+            let breakingPill = gameField.pillsOnMap.find(i => (i.row.includes(cordinate[0])&&i.column.includes(cordinate[1])));
+            if(breakingPill!=undefined){
+                //updates pill properties with new cords, colors and direction 
+                if(breakingPill.direction=="vertical"){
+                    let index = breakingPill.row.indexOf(cordinate[0])
+                    breakingPill.row.splice(index, 1);
+                    breakingPill.colors.splice(index, 1);
+                }else{
+                    let index = breakingPill.column.indexOf(cordinate[1])
+                    breakingPill.column.splice(index, 1);   
+                    breakingPill.colors.splice(index, 1);
+                }
+                breakingPill.direction="dot";
+                if(!(breakingPill.row.length==0 || breakingPill.column.length==0)){//if pill isnt complitly deleted generate it on map
+                    gameField.changePillElementsColor(breakingPill, false);
+                }else{
+                    gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1); //else delete it from array
+                }
+            }
+    } 
+        if(pill.direction=="vertical"){ 
+            pill.row.forEach(item => cordinates.push(markBlocks(item, pill.column[0])));
+        }else if(pill.direction=="horizontal"){ 
+
+             pill.column.forEach(item => cordinates.push(markBlocks(pill.row[0], item))); 
+        }else if(pill.direction=="dot"){
+            cordinates.push(markBlocks(pill.row[0], pill.column[0])); 
         }
+        
+        cordinates = cordinates.flat();
+        if(cordinates.find(i => i!=false)){
+            cordinates.forEach(cordinate =>{
+                if(cordinate!=false){
+                    breakBlock(cordinate);
+                }
+            });
+            return true;
+        }else{
+            return false;
+        }
+        
     },
     findPillByCordinates(rows,columns){
         let pill = this.pillsOnMap.find((i)=>{
