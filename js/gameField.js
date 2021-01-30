@@ -11,7 +11,8 @@ var gameField = {
     brokenViruses: 0, // count broken viruses in whole game
     startGame(){
         document.getElementById("main-page").style.display="none";
-        document.body.style.backgroundImage="url('gfx/gamepatterns/game-pattern-1.png')";
+        document.body.style.backgroundColor= "#9400ce";
+        document.getElementById("playground").style.backgroundColor = "#9400ce";
         this.initiate();
         gameInterface.initiate();
         //checks which keys were pressed and changes the position of the pill
@@ -66,7 +67,9 @@ var gameField = {
             //deletes stage complited image
             document.body.removeChild(stageComplitedImage);
             //set new pattern on background
-            document.body.style.backgroundImage=`url('gfx/gamepatterns/game-pattern-${gameField.level}.png')`;
+            let newBackgroundColor  = "#"+Math.floor(Math.random()*16777215).toString(16);
+            document.body.style.backgroundColor= newBackgroundColor;
+            document.getElementById("playground").style.backgroundColor = newBackgroundColor;
             //every level there is one more virus on map
             config.virusAmount++;
             //changes virus amount and level on table
