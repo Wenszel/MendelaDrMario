@@ -162,18 +162,18 @@ body{
 #blue-loupe{
     position: absolute;
     bottom: 100px;
-    left: 90px;
+    left: 80px;
     z-index: 1;
 }
 #brown-loupe{
     position: absolute;
     bottom: 220px;
-    left: 170px;
+    left: 160px;
     z-index: 1;
 }
 #yellow-loupe{
     position: absolute;
-    bottom: 110px;
+    bottom: 80px;
     left: 220px;
     z-index: 1;
 }

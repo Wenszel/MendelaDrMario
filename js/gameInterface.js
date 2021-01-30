@@ -5,7 +5,18 @@ var gameInterface={
     topScore: document.getElementById("top-score"),
     currentScore: document.getElementById("current-score"),
     //loupe properties
+    loupeVirusesPositions: [{bottom: "100px", left: "90px"},
+                            {bottom: "50px", left: "160px"},
+                            {bottom: "100px", left: "80px"},
+                            {bottom: "110px", left: "220px"},
+                            {bottom: "170px", left: "220px"},
+                            {bottom: "220px", left: "160px"},
+                            {bottom: "220px", left: "170px"},
+                            {bottom: "200px", left: "110px"},
+                            {bottom: "80px", left: "220px"},
+                            ],
     loupe: document.getElementById("loupe"),
+    loupeInterval: null,
     blueVirus: document.getElementById("blue-loupe"),
     brownVirus: document.getElementById("brown-loupe"),
     yellowVirus: document.getElementById("yellow-loupe"),
@@ -30,28 +41,6 @@ var gameInterface={
         while(this.topScore.textContent.length<5){
             this.topScore.textContent= "0"+this.topScore.textContent;
         }
-        //counts virus graphics changes to animate them
-        let counter = 0;
-        setInterval(()=>{
-            counter++
-            if(gameField.virusOnMap.find(i => i.color=="blue")){
-                //animate virus inside loupe
-                this.blueVirus.src="gfx/loupe/bl/"+counter%3+".png"
-            }else{
-                //if there is no that virus color on map virus disappear
-                this.blueVirus.style.display="none";
-            }
-            if(gameField.virusOnMap.find(i => i.color=="brown")){
-                this.brownVirus.src="gfx/loupe/br/"+counter%3+".png"
-            }else{
-                this.brownVirus.style.display="none";
-            }
-            if(gameField.virusOnMap.find(i => i.color=="yellow")){
-                this.yellowVirus.src="gfx/loupe/yl/"+counter%3+".png"
-            }else{
-                this.yellowVirus.style.display="none";
-            }
-        },1000)
         //sets speed info 
         switch(config.speed){
             case "250":
@@ -67,6 +56,8 @@ var gameInterface={
                 this.speedinfo.innerText="LOW";
                 break;
         }
+        //create loupe interval
+        this.startLoupeInterval(null);
         //create game info table
         this.gameinfo.style.display="block";
         this.virusAmount.innerText=gameField.virusOnMap.length;
@@ -109,5 +100,58 @@ var gameInterface={
         while(this.currentScore.innerText.length<5){
             this.currentScore.innerText = "0"+this.currentScore.innerText;
         }
-    }
+    },
+
+    //loupe intervals
+    startLoupeInterval(brokenColor){
+        clearInterval(this.loupeInterval);
+        //counts virus graphics changes to animate them
+        console.log(brokenColor);
+        let counter = 1;
+        this.loupeInterval = setInterval(()=>{
+            this.blueVirus.style.left = this.loupeVirusesPositions[counter%9].left;
+            this.blueVirus.style.bottom = this.loupeVirusesPositions[counter%9].bottom;
+            this.yellowVirus.style.left = this.loupeVirusesPositions[(3+counter)%9].left;
+            this.yellowVirus.style.bottom = this.loupeVirusesPositions[(3+counter)%9].bottom;
+            this.brownVirus.style.left = this.loupeVirusesPositions[(6+counter)%9].left;
+            this.brownVirus.style.bottom = this.loupeVirusesPositions[(6+counter)%9].bottom;
+            counter++
+            if(gameField.virusOnMap.find(i => i.color=="blue")){
+                if (brokenColor=="blue") {
+                    this.blueVirus.src="gfx/loupe/bl/anim.png";
+                    setTimeout(()=>{this.blueVirus.src="gfx/loupe/bl/"+counter%3+".png"},2000);
+                }
+                else this.blueVirus.src="gfx/loupe/bl/"+counter%3+".png";
+            }else if(gameField.virusOnMap.find(i => i.color=="blue")==null && brokenColor=="blue"){
+                this.blueVirus.src="gfx/loupe/bl/anim.png";
+                setTimeout(()=>{this.blueVirus.style.display="none"},2000)
+            }else{
+                this.blueVirus.style.display="none";
+            }
+            if(gameField.virusOnMap.find(i => i.color=="brown")){
+                if (brokenColor=="brown") {
+                    this.brownVirus.src="gfx/loupe/br/anim.png";
+                    setTimeout(()=>{this.brownVirus.src="gfx/loupe/br/"+counter%3+".png"},2000);
+                }
+                else this.brownVirus.src="gfx/loupe/br/"+counter%3+".png"
+            }else if(gameField.virusOnMap.find(i => i.color=="brown")==null && brokenColor=="brown"){
+                this.brownVirus.src="gfx/loupe/br/anim.png";
+                setTimout(()=>{this.brownVirus.style.display="none"},2000);
+            }else{
+                this.brownVirus.style.display="none"
+            }
+            if(gameField.virusOnMap.find(i => i.color=="yellow")){
+                if (brokenColor=="yellow"){
+                    this.yellowVirus.src="gfx/loupe/yl/anim.png";
+                    setTimeout(()=>{this.yellowVirus.src="gfx/loupe/yl/"+counter%3+".png"},2000);          
+                }
+                else this.yellowVirus.src="gfx/loupe/yl/"+counter%3+".png"
+            }else if(gameField.virusOnMap.find(i => i.color=="yellow")==null && brokenColor=="yellow"){
+                this.yellowVirus.src="gfx/loupe/yl/anim.png";
+                setTimeout(()=>{this.yellowVirus.style.display="none"},2000)
+            }else{
+                this.yellowVirus.style.display="none";
+            }
+        },1500)
+    },
 }

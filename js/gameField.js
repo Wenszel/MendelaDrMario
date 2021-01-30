@@ -136,7 +136,7 @@ var gameField = {
         setTimeout(()=>{
             gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
             this.waitingPill = new pill();
-        },750);  
+        },1000);  
     },
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
@@ -161,7 +161,7 @@ var gameField = {
                     setTimeout(()=>{
                         gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
                         gameField.waitingPill = new pill();
-                     },time);   
+                     },1000);   
                 }    
             }        
         },time);
@@ -224,6 +224,7 @@ var gameField = {
                     //if yes changes element background to broken virus and delete virus from array 
                     if(virus!=undefined){
                         elements[cordinates[0]][cordinates[1]].elementDiv.style.backgroundImage = `url('gfx/game-elements/${elements[cordinates[0]][cordinates[1]].color}_x.png')` 
+                        gameInterface.startLoupeInterval(virus.color);
                         virusOnMap.splice(virusOnMap.indexOf(virus),1);
                         //updates interface
                         document.getElementById("virus-amount").innerText=virusOnMap.length;
