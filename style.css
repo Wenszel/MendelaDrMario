@@ -161,20 +161,20 @@ body{
 }
 #blue-loupe{
     position: absolute;
-    bottom: 100px;
-    left: 80px;
+    bottom: 70px;
+    left: 180px;
     z-index: 1;
 }
 #brown-loupe{
     position: absolute;
     bottom: 220px;
-    left: 160px;
+    left: 200px;
     z-index: 1;
 }
 #yellow-loupe{
     position: absolute;
-    bottom: 80px;
-    left: 220px;
+    bottom: 170px;
+    left: 80px;
     z-index: 1;
 }
 #scoreboard{
