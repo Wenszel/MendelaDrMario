@@ -55,15 +55,12 @@ var gameInterface={
         //sets speed info 
         switch(config.speed){
             case "250":
-                console.log("cokolwiek")
                 this.speedinfo.innerText="HIGH";
                 break;
             case "500":
-                console.log("cokolwiek2")
                 this.speedinfo.innerText="MID";
                 break;
             case "1000":
-                console.log("cokolwiek3")
                 this.speedinfo.innerText="LOW";
                 break;
         }
@@ -92,14 +89,16 @@ var gameInterface={
     }
     ,changeTopScore(){
         //if there were more points in last game then ever changes local storage top results
-        if(localStorage.getItem("topResult")<localStorage.getItem("points") || localStorage.getItem("topResult")==null){
-            localStorage.setItem("topResult",localStorage.getItem("points"));
+        if(parseInt(localStorage.getItem("topResult"))<parseInt(localStorage.getItem("points")) || localStorage.getItem("topResult")==null){
+            let points = localStorage.getItem("points");
+            localStorage.setItem("topResult",points);
             //changes top score on interface
             this.topScore.textContent = localStorage.getItem("topResult");
             //fills score with zeros at the beginning
             while(this.topScore.textContent.length<5){
                 this.topScore.textContent= "0"+this.topScore.textContent;
             }
+            localStorage.setItem("points",0);
         }
     },changeCurrentScore(){
         //changes points based on broken viruses

@@ -86,7 +86,7 @@ class pill {
                         return false;
                     }
                 }
-                else if(this.direction=="vertical" && this.column[0]==0){
+                else if(this.direction=="vertical"){
                     if(!gameField.elements[this.row[0]][this.column[0]+1].empty){
                         return false;
                     }

@@ -98,12 +98,12 @@ var gameField = {
         gameInterface.doctor.style.backgroundImage= 'url("gfx/interface-elements/gameover_doctor.png")';
         //checkes if score is higher than last top score
         gameInterface.changeTopScore();
-        localStorage.setItem("points",0);
         clearInterval(gameField.fallingInterval);
     },
     initiate(){ 
         // create game field and fill up elements array
         document.getElementById("playground").style.display="block";
+        localStorage.setItem("points",0);
         this.fieldDiv=document.createElement("div")
         this.fieldDiv.id = "playgroundContent";
         for(let i = 0; i<=config.rows; i++){
@@ -156,17 +156,17 @@ var gameField = {
                 if(gameField.breakBlocks(currentPill)){
                     gameField.fallElements();
                 }
-                if(currentPill.row==1){ //pill on top of the bottle
-                    gameField.gameOver();
-                }else{
-                    clearInterval(gameField.fallingInterval)
+                clearInterval(gameField.fallingInterval)
+                if(currentPill.row!=1){ //pill on top of the bottle
                     gameField.currentPill = gameField.waitingPill;
                     gameField.currentPill.throw();
                     gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
-                    setTimeout(()=>{
+                    setTimeout(()=>{ 
                         gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
                         gameField.waitingPill = new pill();
-                     },time);   
+                     },500);   
+                }else{
+                    gameField.gameOver();
                 }    
             }        
         },time);
@@ -244,7 +244,8 @@ var gameField = {
                 virusOnMap.splice(virusOnMap.indexOf(virus),1);
                 //updates interface
                 document.getElementById("virus-amount").innerText=virusOnMap.length;
-                brokenViruses++;
+                gameField.brokenViruses++;
+                
                 }
             //else changes element background to broken pill
             else{
@@ -294,6 +295,7 @@ var gameField = {
                     breakBlock(cordinate);
                 }
             });
+            gameInterface.changeCurrentScore();
             return true;
         }else{
             return false;
