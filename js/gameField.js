@@ -98,6 +98,8 @@ var gameField = {
         gameInterface.doctor.style.backgroundImage= 'url("gfx/interface-elements/gameover_doctor.png")';
         //checkes if score is higher than last top score
         gameInterface.changeTopScore();
+        gameInterface.startGameOverLoupeInterval();
+        localStorage.setItem("points",0);
         clearInterval(gameField.fallingInterval);
     },
     initiate(){ 
@@ -139,7 +141,7 @@ var gameField = {
         setTimeout(()=>{
             gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
             this.waitingPill = new pill();
-        },750);  
+        },1000);  
     },
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
