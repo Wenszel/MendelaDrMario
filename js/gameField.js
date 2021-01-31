@@ -74,6 +74,7 @@ var gameField = {
             config.virusAmount++;
             //changes virus amount and level on table
             gameInterface.changeVirusAmount();
+            gameInterface.startLoupeInterval([]);
             gameInterface.changeLevel();
             //empty gameField properties
             gameField.currentPill= null;
@@ -237,6 +238,7 @@ var gameField = {
         }
         let breakBlock = function(cordinate){
             //checkes is virus on cords
+            let virusColor;
             let virus = gameField.virusOnMap.find(i=>{
                 if(i.row==cordinate[0] && i.column==cordinate[1]) return true;
             });
@@ -247,7 +249,7 @@ var gameField = {
                 //updates interface
                 document.getElementById("virus-amount").innerText=virusOnMap.length;
                 gameField.brokenViruses++;
-                
+                virusColor = virus.color;
                 }
             //else changes element background to broken pill
             else{
@@ -280,6 +282,7 @@ var gameField = {
                     gameField.pillsOnMap.splice(gameField.pillsOnMap.indexOf(breakingPill),1); //else delete it from array
                 }
             }
+            return virusColor;
     } 
         if(pill.direction=="vertical"){ 
             pill.row.forEach(item => cordinates.push(markBlocks(item, pill.column[0])));
@@ -289,14 +292,15 @@ var gameField = {
         }else if(pill.direction=="dot"){
             cordinates.push(markBlocks(pill.row[0], pill.column[0])); 
         }
-        
+        let virusesColors = [];
         cordinates = cordinates.flat();
         if(cordinates.find(i => i!=false)){
             cordinates.forEach(cordinate =>{
                 if(cordinate!=false){
-                    breakBlock(cordinate);
+                    virusesColors.push(breakBlock(cordinate));
                 }
             });
+            gameInterface.startLoupeInterval(virusesColors);
             gameInterface.changeCurrentScore();
             return true;
         }else{

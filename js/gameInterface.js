@@ -5,13 +5,13 @@ var gameInterface={
     topScore: document.getElementById("top-score"),
     currentScore: document.getElementById("current-score"),
     //loupe properties
-    loupeVirusesPositions: [{bottom: "100px", left: "60px"},//
+    loupeVirusesPositions: [{bottom: "100px", left: "60px"},
                             {bottom: "70px", left: "100px"},
                             {bottom: "70px", left: "180px"},
-                            {bottom: "100px", left: "220px"},//
+                            {bottom: "100px", left: "220px"},
                             {bottom: "220px", left: "220px"},
                             {bottom: "220px", left: "200px"},
-                            {bottom: "220px", left: "140px"},//
+                            {bottom: "220px", left: "140px"},
                             {bottom: "200px", left: "80px"},
                             {bottom: "170px", left: "80px"},
                             ],
@@ -54,7 +54,7 @@ var gameInterface={
                 break;
         }
         //create loupe interval
-        this.startLoupeInterval(null);
+        this.startLoupeInterval([]);
         //create game info table
         this.gameinfo.style.display="block";
         this.virusAmount.innerText=gameField.virusOnMap.length;
@@ -128,14 +128,37 @@ var gameInterface={
             this.brownVirus.style.display="none";
         }     
     },
-    startLoupeInterval(){
+    startLoupeInterval(colors){
         clearInterval(this.loupeInterval);
         this.loupeInterval = setInterval(()=>{
             this.loupeClock+=0.5;
-            this.animateBlueVirus();
-            this.animateBrownVirus();
-            this.animateYellowVirus();
-        },1000)
+            if(colors.length==0){
+                this.animateBlueVirus();
+                this.animateBrownVirus();
+                this.animateYellowVirus();
+            }else{
+                this.animateBrokenViruses(colors);
+            }
+            
+        },500)
+    },
+    animateBrokenViruses(colors){
+        if(colors.includes("blue")){
+            this.blueVirus.src="gfx/loupe/bl/anim.png"
+        }else{
+            this.blueVirus.src="gfx/loupe/bl/"+Math.ceil(this.loupeClock)%2+".png"
+        }
+        if(colors.includes("brown")){
+            this.brownVirus.src="gfx/loupe/br/anim.png"
+        }else{
+            this.brownVirus.src="gfx/loupe/br/"+Math.ceil(this.loupeClock)%2+".png"
+        }
+        if(colors.includes("yellow")){
+            this.yellowVirus.src="gfx/loupe/yl/anim.png"
+        }else{
+            this.yellowVirus.src="gfx/loupe/yl/"+Math.ceil(this.loupeClock)%2+".png"
+        }
+        setTimeout(()=>{this.startLoupeInterval([])},2000);
     },
     startGameOverLoupeInterval(){
         clearInterval(this.loupeInterval);
