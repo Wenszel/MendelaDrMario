@@ -7,8 +7,9 @@ var gameField = {
     virusOnMap: [], //stores viruses on map, is used for virus in loupe animations
     elements: [], // two-dimensional array, stores grid objects
     fallingInterval: null,
-    level: 1,
+    level: 0,
     brokenViruses: 0, // count broken viruses in whole game
+    audio: new Audio('./music/gamemusic.mp3'),
     startGame(){
         document.getElementById("main-page").style.display="none";
         document.body.style.backgroundColor= "#9400ce";
@@ -71,7 +72,7 @@ var gameField = {
             document.body.style.backgroundColor= newBackgroundColor;
             document.getElementById("playground").style.backgroundColor = newBackgroundColor;
             //every level there is one more virus on map
-            config.virusAmount++;
+            config.virusAmount+=4
             //changes virus amount and level on table
             gameInterface.changeVirusAmount();
             gameInterface.startLoupeInterval([]);
@@ -85,7 +86,7 @@ var gameField = {
             document.getElementById("playground").removeChild(gameField.fieldDiv);
             //next level starts
             gameField.initiate();
-        },1000);
+        },4000);
     },
     gameOver(){
         //removes preview
@@ -98,6 +99,12 @@ var gameField = {
         //updates interface with new doctor image
         gameInterface.doctor.style.backgroundImage= 'url("gfx/interface-elements/gameover_doctor.png")';
         //checkes if score is higher than last top score
+        if(config.music===true){
+            this.audio.src= "./music/gameover.mp3";
+            this.audio.play();
+        }else{
+            this.audio.src="";
+        }
         gameInterface.changeTopScore();
         gameInterface.startGameOverLoupeInterval();
         localStorage.setItem("points",0);
@@ -135,6 +142,14 @@ var gameField = {
             let newVirus = new virus(i);
             this.virusOnMap.push(newVirus);
         }
+        if(config.music===true && gameField.level==20){
+            this.audio.src='./music/lvl20.mp3'
+            this.audio.play();
+        }else if(config.music===true){
+            this.audio.play();
+        }else{
+            this.audio.src="";
+        }
         //creates pill, throw it and change doctor image
         this.currentPill = new pill();
         this.currentPill.throw();
@@ -160,14 +175,14 @@ var gameField = {
                     gameField.fallElements();
                 }
                 clearInterval(gameField.fallingInterval)
-                if(currentPill.row!=1){ //pill on top of the bottle
+                if(gameField.elements[1][3].empty && gameField.elements[1][4].empty){ //pill on top of the bottle
                     gameField.currentPill = gameField.waitingPill;
                     gameField.currentPill.throw();
                     gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
                     setTimeout(()=>{ 
                         gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
                         gameField.waitingPill = new pill();
-                     },500);   
+                     },1000);   
                 }else{
                     gameField.gameOver();
                 }    

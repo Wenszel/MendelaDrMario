@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Dr Mario</title>
+    <head>  
+        <title>Dr Mario</title>    
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+       
         <link rel="shortcut icon" href="gfx/interface-elements/favicon.png" type="image/x-icon">
         <link rel="stylesheet" href="style.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
         <script src="js/config.js"></script>
         <script src="js/pill.js"></script>
         <script src="js/virus.js"></script>
@@ -23,14 +24,14 @@
         </div>
         <div id="playground">
             <div id="doctor">
-
             </div>
         </div>
         <div id="settings">
             <div class="menu">
                 <div class="settings-button">
                     <h2>VIRUS LEVEL</h2>
-                    <input type="range" name="viruslevel" min="3" max="12">
+                    <input id="rangeinput" type="range" min="0" max="20" value="0" onchange="rangevalue.value=value"></input> 
+                    <output id="rangevalue">0</output>
                 </div>
                 <div class="settings-button">
                     <h2>SPEED</h2>
@@ -59,16 +60,17 @@
             <p id="current-score">00000</p>
         </div>
         <div id="loupe">
-            <img src="gfx/loupe/bl/0.png" alt="blue virus in loupe" id="blue-loupe">
-            <img src="gfx/loupe/br/0.png" alt="brown virus in loupe" id="brown-loupe">
-            <img src="gfx/loupe/yl/0.png" alt="yellow virus in loupe" id="yellow-loupe">
+            <img src="gfx/loupe/bl/game.png" alt="blue virus in loupe" id="blue-loupe">
+            <img src="gfx/loupe/br/game.png" alt="brown virus in loupe" id="brown-loupe">
+            <img src="gfx/loupe/yl/game.png" alt="yellow virus in loupe" id="yellow-loupe">
         </div>
         
         <div id="game-info">
-            <p id="level" class="game-info-element">01</p>
+            <p id="level" class="game-info-element">00</p>
             <p id="speed" class="game-info-element">MID</p>
             <p id="virus-amount" class="game-info-element">05</p>
         </div>
+        
         <script src="js/settingsInterface.js"></script>
         <script src="js/gameInterface.js"></script>
         <script src="js/gameField.js"></script>

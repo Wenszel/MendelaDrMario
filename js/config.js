@@ -3,7 +3,7 @@ var config = {
     rows: 16,
     columns: 8,
     speed: 500,
-    virusAmount: 5,
+    virusAmount: 4,
     music: false,
     colors: ["brown","blue","yellow"]
 };

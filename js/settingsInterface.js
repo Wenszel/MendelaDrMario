@@ -30,10 +30,11 @@ var settingsInterface = {
     //transmits data from inputs to config
     parseData(){
         let speed = document.querySelector('input[name="speed"]:checked').value;
-        let viruslevel = document.querySelector('input[name="viruslevel"]').value;
+        let virusLevel = document.querySelector('#rangevalue').value;
         let music = document.querySelector('input[name="music"]:checked').value;
         config.speed=speed;
-        config.virusAmount=viruslevel;
-        config.music=music;
+        config.virusAmount=4+(virusLevel*4);
+        gameField.level = virusLevel
+        music=="true" ? config.music = true : config.music = false;
     }
 }
