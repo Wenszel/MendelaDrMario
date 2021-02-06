@@ -134,6 +134,22 @@ var gameInterface={
             this.brownVirus.style.display="none";
         }     
     },
+    resetLoupeInterval(){
+        this.loupeClock = 0;
+        this.blueVirus.style.display="block";
+        this.blueVirus.src="gfx/loupe/bl/game.png"
+        this.blueVirus.style.left = this.loupeVirusesPositions[this.loupeClock%9].left;
+        this.blueVirus.style.bottom = this.loupeVirusesPositions[this.loupeClock%9].bottom;
+        this.brownVirus.style.display="block";
+        this.brownVirus.src="gfx/loupe/br/game.png"
+        this.brownVirus.style.left = this.loupeVirusesPositions[(6+this.loupeClock)%9].left;
+        this.brownVirus.style.bottom = this.loupeVirusesPositions[(6+this.loupeClock)%9].bottom;
+        this.yellowVirus.style.display="block";
+        this.yellowVirus.src="gfx/loupe/yl/game.png"
+        this.yellowVirus.style.left = this.loupeVirusesPositions[(3+this.loupeClock)%9].left;
+        this.yellowVirus.style.bottom = this.loupeVirusesPositions[(3+this.loupeClock)%9].bottom;
+        this.startLoupeInterval([]);
+    },
     startLoupeInterval(colors){
         clearInterval(this.loupeInterval);
         if(colors.length==0){

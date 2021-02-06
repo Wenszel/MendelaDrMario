@@ -75,7 +75,7 @@ var gameField = {
             config.virusAmount+=4
             //changes virus amount and level on table
             gameInterface.changeVirusAmount();
-            gameInterface.startLoupeInterval([]);
+            gameInterface.resetLoupeInterval();
             gameInterface.changeLevel();
             //empty gameField properties
             gameField.currentPill= null;
@@ -93,6 +93,7 @@ var gameField = {
         document.getElementById("pill").remove();
         //adds game over info image
         let gameoverImage = new Image();
+        gameField.currentPill.canMove=false;
         gameoverImage.src="gfx/interface-elements/gameover.png"
         gameoverImage.classList.add("gameinfo-image");
         document.body.appendChild(gameoverImage);
@@ -109,6 +110,19 @@ var gameField = {
         gameInterface.startGameOverLoupeInterval();
         localStorage.setItem("points",0);
         clearInterval(gameField.fallingInterval);
+    },
+    gameWon(){
+        //removes preview
+        document.getElementById("pill").remove();
+        //adds game over info image
+        let gameoverImage = new Image();
+        gameoverImage.src="gfx/interface-elements/gameover.png"
+        gameoverImage.classList.add("gameinfo-image");
+        document.body.appendChild(gameoverImage);
+        gameInterface.changeTopScore();
+        localStorage.setItem("points",0);
+        clearInterval(gameField.fallingInterval);
+        alert("YOU WON!!!!!");
     },
     initiate(){ 
         // create game field and fill up elements array
@@ -154,39 +168,54 @@ var gameField = {
         this.currentPill = new pill();
         this.currentPill.throw();
         gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
+        setTimeout(()=>{gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_mid.png')";},400);
         setTimeout(()=>{
             gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
             this.waitingPill = new pill();
-        },1000);  
+        },500);  
     },
     createFallingInterval(time){
         clearInterval(gameField.fallingInterval)
         this.fallingInterval = setInterval(function(){
             let {pillsOnMap, currentPill} = gameField;
-            if(gameField.virusOnMap.length==0){ //when there is no more viruses on map
-                gameField.stageCompleted();
-            }else if (currentPill.isFallible()){ //when pill can fall
+            if(gameField.virusOnMap.length!=0){
+            if (currentPill.isFallible()){ //when pill can fall
                 currentPill.fallOnce();     
             }else{ //when pill cant keeps falling
                 currentPill.landed(); 
+                currentPill.canMove=false;
                 pillsOnMap.push(currentPill);
-                //TODO: zifowac to jak skoncze debugowanie break
                 if(gameField.breakBlocks(currentPill)){
                     gameField.fallElements();
                 }
-                clearInterval(gameField.fallingInterval)
-                if(gameField.elements[1][3].empty && gameField.elements[1][4].empty){ //pill on top of the bottle
-                    gameField.currentPill = gameField.waitingPill;
-                    gameField.currentPill.throw();
-                    gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";
-                    setTimeout(()=>{ 
-                        gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
-                        gameField.waitingPill = new pill();
-                     },1000);   
-                }else{
-                    gameField.gameOver();
-                }    
-            }        
+                clearInterval(gameField.fallingInterval);
+                setTimeout(()=>{
+                    if(gameField.virusOnMap != 0){
+                        if(gameField.elements[1][3].empty && gameField.elements[1][4].empty){ //pill on top of the bottle
+                            gameField.currentPill = gameField.waitingPill;
+                            gameField.currentPill.throw();
+                            gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_mid.png')";
+                            setTimeout(()=>{gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_down.png')";},150);
+                            setTimeout(()=>{gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_mid.png')";},400);
+                            setTimeout(()=>{ 
+                                gameInterface.doctor.style.backgroundImage="url('gfx/interface-elements/doctor_hand_up.png')";
+                                gameField.waitingPill = new pill();
+                            },500);  
+                        }else{
+                            gameField.gameOver();
+                        } 
+                    }else{
+                        if(gameField.virusOnMap.length == 0 && gameField.level==20){ //when there is no more viruses on map
+                            gameField.gameWon();
+                        }else if(gameField.virusOnMap == 0){
+                            gameField.stageCompleted();                   
+                    }    
+                }
+                },250)
+            }   
+        }else{
+            gameField.stageCompleted();
+        }     
         },time);
     }, 
     //changes gamefield elements to pill colors
@@ -331,18 +360,25 @@ var gameField = {
         return pill;
     },
     fallElements(){
+        let counter = 0 
         gameField.pillsOnMap.forEach(fallingPill=>{
-            fallingPill.released(); //this method makes field elements empty
+            setTimeout(()=>{
             let interval = setInterval(function(){
-                if (fallingPill.isFallible()){
-                    fallingPill.fallOnce();     
-                }else{
-                    fallingPill.landed();
-                    let isBrokenAnyPill = gameField.breakBlocks(fallingPill); 
-                    if(isBrokenAnyPill) gameField.fallElements(); //while there is any broken pill on map triggers falling function
-                    clearInterval(interval);    
-                }        
+                    if (fallingPill.isFallible()){
+                        fallingPill.released(); //this method makes field elements empty
+                        fallingPill.fallOnce();     
+                    }else{
+                        fallingPill.landed();
+                        let isBrokenAnyPill = gameField.breakBlocks(fallingPill)
+                        clearInterval(interval); 
+                        if(isBrokenAnyPill){
+                            gameField.fallElements(); //while there is any broken pill on map triggers falling function
+                        } 
+                    }  
             },60);  
+        },5*counter);
+        counter++
         });
+        
     }
 };

@@ -34,13 +34,21 @@ class pill {
     } 
     throw(){
         let pill = document.getElementById("pill");
-        let path =[[0,22],[-22,22],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[-22,0],[0,-22],[0,-22],[0,-22],[0,-22]];
+        let path =[[-22,22,0],[-22,22,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,0,1],[-22,-22,1],[-22,-22,0],[0,-22,0],[0,-22,0]];
+        let deg = [0,90,360,270];
         let counter = 0;
         let throwingInterval = setInterval(()=>{
             let parseTopValue = parseInt(pill.style.top);
             let parseLeftValue = parseInt(pill.style.left);
             pill.style.left = parseLeftValue+path[counter][0]+"px";
             pill.style.top = parseTopValue-path[counter][1]+"px";
+            if(path[counter][2]==1){
+                pill.style.webkitTransform = 'rotate('+deg[counter%4]+'deg)'; 
+                pill.style.mozTransform    = 'rotate('+deg[counter%4]+'deg)'; 
+                pill.style.msTransform     = 'rotate('+deg[counter%4]+'deg)'; 
+                pill.style.oTransform      = 'rotate('+deg[counter%4]+'deg)'; 
+                pill.style.transform       = 'rotate('+deg[counter%4]+'deg)'; 
+            }
             counter++;
             if(counter==path.length){
                 setTimeout(()=>{

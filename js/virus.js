@@ -3,7 +3,7 @@ class virus {
     //id makes viruses have different colors
     constructor(id){
         do{
-            this.row = Math.floor(Math.random()*(2/3*config.rows)+(config.rows-(2/3*config.rows))); //draws the height to 2/3 the number of rows
+            this.row = Math.floor(Math.random()*12)+5; //draws the height to 2/3 the number of rows
             this.column = Math.floor(Math.random()*config.columns); 
         }while(!gameField.elements[this.row][this.column].empty) 
         this.color = config.colors[id%3];
