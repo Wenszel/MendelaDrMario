@@ -159,8 +159,10 @@ var gameField = {
         if(config.music===true && gameField.level==20){
             this.audio.src='./music/lvl20.mp3'
             this.audio.play();
+            this.audio.loop = true;
         }else if(config.music===true){
             this.audio.play();
+            this.audio.loop = true;
         }else{
             this.audio.src="";
         }
@@ -249,7 +251,6 @@ var gameField = {
         let { elements, virusOnMap, brokenViruses } = gameField; 
         let cordinates = [];
         let markBlocks = (row, column)=>{
-
             let sameColorHorizontal = [];
             let sameColorVertical = [];
 
@@ -366,14 +367,14 @@ var gameField = {
             let interval = setInterval(function(){
                     if (fallingPill.isFallible()){
                         fallingPill.released(); //this method makes field elements empty
-                        fallingPill.fallOnce();     
+                        fallingPill.fallOnce();
+                        fallingPill.landed();     
                     }else{
-                        fallingPill.landed();
-                        let isBrokenAnyPill = gameField.breakBlocks(fallingPill)
-                        clearInterval(interval); 
+                        let isBrokenAnyPill = gameField.breakBlocks(fallingPill);
                         if(isBrokenAnyPill){
                             gameField.fallElements(); //while there is any broken pill on map triggers falling function
                         } 
+                        clearInterval(interval); 
                     }  
             },60);  
         },5*counter);
