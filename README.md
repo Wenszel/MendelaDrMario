@@ -20,6 +20,12 @@ cd vanillajs-dr-mario
 start index.html
 
 ```
+## Controls
+* Left arrow / A - move left
+* Right arrow / D - move right
+* Arrow up / W - rotate left
+* Left Shift - rotate right
+* Down Arrow / S - drop a pill
 
 ## Interface
 
